@@ -22,3 +22,15 @@
  * [Vishnu Nandakumar](https://github.com/vivanvish)
 
 ## License
+
+## References
+
+### Literature
+1. [Fast R-CNN -  Ross Girshick](https://arxiv.org/abs/1504.08083)
+2. [Faster R-CNN: Towards Real-Time Object Detection with Region Proposal Networks - Shaoqing Ren, Kaiming He, Ross Girshick, Jian Sun](https://arxiv.org/abs/1506.01497)
+3. [Mask R-CNN - Kaiming He, Georgia Gkioxari, Piotr Dollár, Ross Girshick](https://arxiv.org/abs/1703.06870)
+
+### Implementations
+
+1. [facebookresearch/detectron](https://github.com/facebookresearch/Detectron)
+2. [matterport/Mask_RCNN](https://github.com/matterport/Mask_RCNN)
