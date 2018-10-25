@@ -9,7 +9,7 @@
     <meta name="author" content="">
     <link rel="icon" href="favicon.ico">
 
-    <title>Narrow Jumbotron Template for Bootstrap</title>
+    <title>CloMask</title>
 
     <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
@@ -17,14 +17,23 @@
     <!-- Optional theme -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
 
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css" integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz" crossorigin="anonymous">
+
+    <script
+  src="https://code.jquery.com/jquery-3.3.1.min.js"
+  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+  crossorigin="anonymous"></script>
+
     <!-- Latest compiled and minified JavaScript -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+    <script src="./js/dropzone.js"></script>
 
     <!-- Custom styles for this template -->
     <link href="css/jumbotron-narrow.css" rel="stylesheet">
   </head>
 
-  <body>
+  <body onload="setup()">
 
     <div class="container">
       <div class="header clearfix">
@@ -38,10 +47,13 @@
         <h3 class="text-muted">CloMask</h3>
       </div>
 
-      <div class="jumbotron">
-        <h1>Upload File</h1>
-        <p class="lead">Upload (or Drag and Drop File Here)</p>
-        <p><a class="btn btn-lg btn-success" href="#" role="button">Upload</a></p>
+      <div class="jumbotron" id="imagedrop">
+          <form onsubmit="uploadImage(event);" id="uploadform">
+            <input name="file" type="file" id="dropfallback" style="display: none;" />
+          </form>
+
+          <h1>Upload File</h1>
+          <p class="lead"><i id="uploadicon" class="fas fa-upload"></i>Upload (or Drag and Drop File Here)</p>
       </div>
 
       <div class="row marketing">
@@ -67,9 +79,28 @@
       </footer>
 
     </div> <!-- /container -->
-
-
-    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
-    <script src="../../assets/js/ie10-viewport-bug-workaround.js"></script>
   </body>
+
+  <script>
+    var myDropzone = new Dropzone("div#imagedrop", { url: "/file/post"});
+
+    function setup() {
+      // When someone clicks on the upload icon
+      // Open the upload file action
+      document.getElementById('uploadicon')
+              .addEventListener('click', function openDialog() {
+                document.getElementById('dropfallback').click();
+              });
+
+      document.getElementById('dropfallback')
+              .addEventListener('change', function submitForm() {
+                  console.log("Uploading image (not really)")
+                  var imageFile = document.getElementById("dropfallback").files[0];
+                  console.log(imageFile.name);
+                  document.getElementById('uploadform').submit();
+              });
+
+    }
+
+  </script>
 </html>
