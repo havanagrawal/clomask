@@ -1,6 +1,6 @@
 function onSignIn(googleUser) {
   var id_token = googleUser.getAuthResponse().id_token;
-  console.log("Retrieved credentials using Google as idnetity provider");
+  console.log("Retrieved credentials using Google as identity provider");
 
   AWS.config.region = 'us-west-2'; // Region
   AWS.config.credentials = new AWS.CognitoIdentityCredentials({
