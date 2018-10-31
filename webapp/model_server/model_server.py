@@ -9,19 +9,17 @@ logging.basicConfig(level=logging.INFO)
 import boto3
 
 from config import *
-from model import load_model
+from model import load_coco_model, create_mask
 
+MODEL = load_coco_model()
 
 SQS_QUEUE = boto3.resource("sqs").Queue(SQS_URL)
 INPUT_S3_BUCKET = boto3.resource("s3").Bucket(INPUT_S3_BUCKET_NAME)
 OUTPUT_S3_BUCKET = boto3.resource("s3").Bucket(OUTPUT_S3_BUCKET_NAME)
 
-# Load the model once, during deployment
-MODEL = load_model(MODEL_PATH)
-
 # How long should we wait if the queue is empty
 # TODO: Change to exponential backoff
-SLEEP_TIME_IN_SEC = 10
+SLEEP_TIME_IN_SEC = 2
 
 # Create the output dir if it doesn't exist
 if not os.path.exists(OUTPUT_DIR):
@@ -50,10 +48,9 @@ def cleanup(s3_image_key):
     os.remove(OUTPUT_DIR + "/" + s3_image_key)
 
 
-def create_mask(s3_image_key):
+def create_mask_from_s3_key(s3_image_key):
     # Use the model to create the mask files and the visualization
-    # Dummy, simply copy the file as is
-    copyfile(s3_image_key, OUTPUT_DIR + "/" + s3_image_key)
+    create_mask(MODEL, s3_image_key, OUTPUT_DIR + "/" + s3_image_key)
     return OUTPUT_DIR + "/" + s3_image_key
 
 
@@ -65,19 +62,22 @@ def main():
 
         # Pick up the image from S3
         INPUT_S3_BUCKET.download_file(s3_image_key, s3_image_key)
+        logging.info("Downloaded %s from S3", s3_image_key)
 
         # Get the mask predictions and annotations
-        output_file = create_mask(s3_image_key)
+        output_file = create_mask_from_s3_key(s3_image_key)
+        logging.info("Created mask for %s", s3_image_key)
 
         # Upload to output S3 bucket
         OUTPUT_S3_BUCKET.upload_file(output_file, s3_image_key)
+        logging.info("Uploaded %s to S3", s3_image_key)
 
         # Cleanup files
         cleanup(s3_image_key)
+        logging.info("Cleaned up local files")
 
         # Delete from queue, so that we don't reprocess it
         SQS_QUEUE.delete_messages(Entries=[{'Id': 'dummy', 'ReceiptHandle': receipt_handle}])
-
         logging.info("Successfully processed image %s with handle %s", s3_image_key, receipt_handle)
 
 

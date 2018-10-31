@@ -67,6 +67,9 @@
           <h1>Upload File</h1>
           <p class="lead"><i id="uploadicon" class="fas fa-upload"></i>Upload (or Drag and Drop File Here)</p>
       </div>
+      <div id="maskedimage">
+
+      </div>
       </form>
 
       <!--------------------->
@@ -101,8 +104,12 @@
   </body>
 
   <script>
+    function sleep(ms) {
+      return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
     function uploadImage(imageFile) {
-      var s3 = new AWS.S3({
+      const s3 = new AWS.S3({
          apiVersion: '2006-03-01',
          params: {Bucket: 'clomask-input'}
        });
@@ -138,7 +145,23 @@
                   console.log("Uploadinging image via pop up and selection")
                   var imageFile = document.getElementById("dropfallback").files[0];
                   uploadImage(imageFile);
-                  // TODO: Need to display mask after querying output bucket
+
+                  const s3 = new AWS.S3({
+                     apiVersion: '2006-03-01',
+                     params: {Bucket: 'clomask-output'}
+                   });
+
+                  // Sleep so that we wait for the mask to be generated on the output bucket
+                  sleep(30*1000).then(() => {
+                    const url = s3.getSignedUrl('getObject', {
+                      Bucket: 'clomask-output',
+                      Key: imageFile.name,
+                      Expires: 60*5
+                    })
+                    // TODO: Need to display mask after querying output bucket
+                    console.log(url);
+                    document.getElementById("maskedimage").innerHTML = "<img src=\"" + url + "\" />"
+                  })
               });
     }
 
