@@ -3,10 +3,13 @@ import sys
 import random
 import math
 from shutil import copyfile
+
 import numpy as np
 import skimage.io
 import matplotlib
 import matplotlib.pyplot as plt
+
+from model_api import Model
 
 # Root directory of the project
 ROOT_DIR = os.path.abspath("Mask_RCNN")
@@ -16,6 +19,7 @@ sys.path.append(ROOT_DIR)  # To find local version of the library
 from mrcnn import utils
 import mrcnn.model as modellib
 from mrcnn import visualize
+
 # Import COCO config
 sys.path.append(os.path.join(ROOT_DIR, "samples/coco/"))  # To find local version
 import coco
@@ -58,33 +62,33 @@ class_names = ['BG', 'person', 'bicycle', 'car', 'motorcycle', 'airplane',
                'teddy bear', 'hair drier', 'toothbrush']
 
 
-def load_coco_model():
-    config = InferenceConfig()
+class CocoModel(Model):
+    def __init__(self):
+        super().__init__("Coco")
+        config = InferenceConfig()
 
-    # Create model object in inference mode.
-    model = modellib.MaskRCNN(mode="inference", model_dir=MODEL_DIR, config=config)
+        # Create model object in inference mode.
+        self.model = modellib.MaskRCNN(mode="inference", model_dir=MODEL_DIR, config=config)
 
-    # Load weights trained on MS-COCO
-    model.load_weights(COCO_MODEL_PATH, by_name=True)
+    def load(self, filepath=None):
+        self.model.load_weights(COCO_MODEL_PATH, by_name=True)
 
-    return model
+    def create_mask(self, filepath, output_dir):
+        output_path = output_dir + "/" + os.path.basename(filepath)
+        image = skimage.io.imread(filepath)
 
+        # Run detection
+        results = self.model.detect([image], verbose=1)
 
-def create_mask(model, filename, output_filepath):
+        # Visualize results
+        r = results[0]
+        visualize.display_instances(image, r['rois'], r['masks'], r['class_ids'],
+                                    class_names, r['scores'], figsize=(8, 6), savepath=output_path)
 
-    if model == "dummy":
-        copyfile(filename, output_filepath)
-
-    image = skimage.io.imread(filename)
-
-    # Run detection
-    results = model.detect([image], verbose=1)
-
-    # Visualize results
-    r = results[0]
-    visualize.display_instances(image, r['rois'], r['masks'], r['class_ids'],
-                                class_names, r['scores'], figsize=(8, 6), savepath=output_filepath)
+        return output_path
 
 if __name__ == "__main__":
-    model = load_coco_model()
-    create_mask(model, "4550024280_e6ca260605_z.jpg", "output/4550024280_e6ca260605_z.jpg")
+    model = CocoModel()
+    model.load()
+    f = model.create_mask("15409674101077949923911974822053.jpg", "output")
+    print(f)

@@ -2,7 +2,7 @@
 
 **Owner**: [Havan Agrawal](https://github.com/havanagrawal)
 
-![Preview](./preview.png)
+![Preview](./CloMaskWebAppDemo.gif)
 
 ## Working
 

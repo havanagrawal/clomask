@@ -9,9 +9,10 @@ logging.basicConfig(level=logging.INFO)
 import boto3
 
 from config import *
-from model import load_coco_model, create_mask
+from coco_model import CocoModel
 
-MODEL = load_coco_model()
+MODEL = CocoModel()
+MODEL.load()
 
 SQS_QUEUE = boto3.resource("sqs").Queue(SQS_URL)
 INPUT_S3_BUCKET = boto3.resource("s3").Bucket(INPUT_S3_BUCKET_NAME)
@@ -37,7 +38,7 @@ def s3_image_key_gen():
 
         for message in messages:
             m_dict = json.loads(message.body)
-            print(m_dict)
+            logging.debug(m_dict)
             obj_key = m_dict["Records"][0]["s3"]["object"]["key"]
             obj_key = obj_key.replace("+", " ")
             yield obj_key, message.receipt_handle
@@ -46,12 +47,6 @@ def s3_image_key_gen():
 def cleanup(s3_image_key):
     os.remove(s3_image_key)
     os.remove(OUTPUT_DIR + "/" + s3_image_key)
-
-
-def create_mask_from_s3_key(s3_image_key):
-    # Use the model to create the mask files and the visualization
-    create_mask(MODEL, s3_image_key, OUTPUT_DIR + "/" + s3_image_key)
-    return OUTPUT_DIR + "/" + s3_image_key
 
 
 def main():
@@ -65,7 +60,7 @@ def main():
         logging.info("Downloaded %s from S3", s3_image_key)
 
         # Get the mask predictions and annotations
-        output_file = create_mask_from_s3_key(s3_image_key)
+        output_file = MODEL.create_mask(s3_image_key, OUTPUT_DIR)
         logging.info("Created mask for %s", s3_image_key)
 
         # Upload to output S3 bucket
