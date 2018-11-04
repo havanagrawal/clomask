@@ -8,7 +8,7 @@ Even though the pretrained model gives decent results for recognizing bottles, i
 The images have been collected from google images, using this package: [google-images-download
 ](https://github.com/hardikvasa/google-images-download). 
 
-### Labelling
+### Labeling
 There are two tools that looks promising for manually marking the Masks:
 - [LabelMe](http://labelme.csail.mit.edu/Release3.0/)
     - OpenSource
