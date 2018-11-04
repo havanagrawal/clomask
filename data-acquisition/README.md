@@ -32,11 +32,12 @@ There are two tools that looks promising for manually marking the Masks:
 -  Step 6: Mark the outside region by selecting the tool below the masking tool (in blue).
 ![alt text](imgs_readme/mark_outside_regions.jpg)
 - Step 7: Save the mask by clicking **Done**. Since we are going to mark only bottles, make sure that the name for all masks is **bottle**.
+![alt text](imgs_readme/save_mask.jpg)
 - Step 8: Continue steps 5-7 till all the bottles in the image are marked.
 - Step 9: Once this is done for all images, we can download the masks for the entire collection. Click Download to start the download process.
-![alt text](imgs_readme/mark_outside_regions.jpg)
+![alt text](imgs_readme/Download_collection.jpg)
 - Step 10: Make sure that both options are selected before downloading.
-![alt text](imgs_readme/mark_outside_regions.jpg)
+![alt text](imgs_readme/download_options.jpg)
 
 **Notes**  
 The tool was a bit flaky on Firefox. I would recommend Chrome for this.
