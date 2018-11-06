@@ -44,7 +44,8 @@ The tool was a bit flaky on Firefox. I would recommend Chrome for this.
 
 
 ### Supervisely Workflow
- Will be added by Tejas.
+- Step 1: Create an account.
+- Step 2: Drag a folder containing the images to be labelled into the upload dropbox. These are the images that will be labelled using the Supervisely platform. 
 
 
 
