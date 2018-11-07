@@ -45,9 +45,37 @@ The tool was a bit flaky on Firefox. I would recommend Chrome for this.
 
 ### Supervisely Workflow
 - Step 1: Create an account.
+
 - Step 2: Drag a folder containing the images to be labelled into the upload dropbox. These are the images that will be labelled using the Supervisely platform. 
 
+  ![alt text](imgs_readme/upload_supervisely.png)
 
+- Step 3: Go to the projects page and click on the project you just created.
+
+  ![alt text](imgs_readme/select_project.png)
+
+- Step 4: Select the dataset that you want to use in the given project.
+
+  ![alt text](imgs_readme/select_dataset.png)
+
+- Step 5: Begin the labeling process. One way you can label is using the rectangle tool.![alt text](imgs_readme/labeling_using_rectangle.png)
+
+You can also label using the the bitmap tool (the brush on the left hand toolbar). 
+
+- Step 6: Repeat step 6 till all objects are labeled. 
+
+- Step 7: When you are done and ready to download the data, go back to the project page and click the three dots lined up to form a vertical line. You have three options, you can download as JSON, masks or transform. 
+
+  ![alt text](imgs_readme/start_download_process.png)
+
+- Step 8: Regardless of the option that you choose, you will be directed to a page where you will be prompted to start the DTL process. Hit start on this page. 
+
+  ![alt text](imgs_readme/start_process_dtl.png)
+
+- Step 9: After this is done, you can download the result after the process is complete.
+
+  ![alt text](imgs_readme/download_result.png)
 
 ### Datastore
+
 The annotated data will be store in a common location, probably a drive or in an S3 bucket. We can make this decision later.
