@@ -37,7 +37,7 @@ There are two tools that looks promising for manually marking the Masks:
 - Step 9: Once this is done for all images, we can download the masks for the entire collection. Click Download to start the download process.
 ![alt text](imgs_readme/Download_collection.jpg)
 - Step 10: Make sure that both options are selected before downloading.
-![alt text](imgs_readme/download_options.jpg)
+![alt text](imgs_readme/download_options.png)
 
 **Notes**  
 The tool was a bit flaky on Firefox. I would recommend Chrome for this.
