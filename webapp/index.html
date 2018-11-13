@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <meta name="google-signin-client_id" content="925797148573-q7btev87hp1qfj80ehlgc7jrnlk7eed5.apps.googleusercontent.com">
+
+    <link rel="icon" href="favicon.ico">
+
+    <title>CloMask</title>
+
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css" integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz" crossorigin="anonymous">
+
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+    <script src="./js/dropzone.js"></script>
+
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
+    <script src="./js/aws-sdk.min.js"></script>
+    <script src="./js/s3utils.js"></script>
+
+    <script src="./js/credentials.js"></script>
+
+    <!-- Custom styles for this template -->
+    <link href="css/jumbotron-narrow.css" rel="stylesheet">
+  </head>
+
+  <body onload="setup()">
+
+    <div class="container">
+      <!------------->
+      <!-- The Nav -->
+      <!------------->
+      <div class="header clearfix">
+        <nav>
+          <ul class="nav nav-pills pull-right">
+            <li role="presentation" class="active"><a href="#">Home</a></li>
+            <li role="presentation"><a href="#">About</a></li>
+            <li role="presentation"><a href="https://github.com/havanagrawal/clomask">GitHub</a></li>
+            <li role="presentation"><div class="g-signin2" data-onsuccess="onSignIn"></div></li>
+          </ul>
+        </nav>
+        <h3 class="text-muted">CloMask</h3>
+      </div>
+
+      <!------------------>
+      <!-- The drop box -->
+      <!------------------>
+      <form onsubmit="uploadImage(event);" id="uploadform">
+      <div class="jumbotron" id="imagedrop">
+
+          <input name="file" type="file" id="dropfallback" style="display: none;" />
+
+          <h1>Upload File</h1>
+          <p class="lead"><i id="uploadicon" class="fas fa-upload"></i>Upload (or Drag and Drop File Here)</p>
+      </div>
+      <div id="maskedimage">
+
+      </div>
+      </form>
+
+      <!--------------------->
+      <!-- The bottom half -->
+      <!--------------------->
+      <div class="row marketing">
+        <div class="col-lg-6">
+          <h4>What</h4>
+          <p>CloMask is a custom implementation of Mask R-CNN for consumable retail products such as popular carbonated drinks, chips, etc.</p>
+
+          <h4>Issue</h4>
+          <p>If you encounter any issue with using the app, please <a href="https://github.com/havanagrawal/clomask/issues/new"></a>raise an issue</a> on the GitHub repo, clearly describing the problem, and providing the steps once can perform to reproduce the issue.</p>
+        </div>
+
+        <div class="col-lg-6">
+          <h4>Sponsor</h4>
+          <p>This project is sponsored by Clobotics</p>
+
+          <h4>Under Development</h4>
+          <p>This application is currently under active development, and so may have several features missing. For a complete list of features being worked on, check <a href="https://github.com/havanagrawal/clomask/issues">here</a></p>
+        </div>
+      </div>
+
+      <footer class="footer">
+        <p>&copy; 2018.</p>
+      </footer>
+
+    </div>
+
+    <div id="app">
+    </div>
+  </body>
+
+  <script>
+    function sleep(ms) {
+      return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    function uploadImage(imageFile) {
+      const s3 = new AWS.S3({
+         apiVersion: '2006-03-01',
+         params: {Bucket: 'clomask-input'}
+       });
+
+      addPhoto(s3, imageFile);
+    }
+
+    function setup() {
+      Dropzone.autoDiscover = false;
+      var imageDropZone = new Dropzone("#imagedrop", {
+        url: '/',
+        acceptedFiles: "image/*,",
+        previewTemplate: "<div></div>"
+      });
+      imageDropZone.on("addedfile", function(file) {
+        console.log("Uploading image via the drag and drop");
+        uploadImage(file);
+        // TODO: Need to display mask after querying output bucket
+      });
+      imageDropZone.on("uploadprogress", function(dontcare, progress, bytes) {
+        console.log(progress);
+      })
+
+      // When someone clicks on the upload icon
+      // Open the upload file action
+      document.getElementById('uploadicon')
+              .addEventListener('click', function openDialog() {
+                document.getElementById('dropfallback').click();
+              });
+
+      document.getElementById('dropfallback')
+              .addEventListener('change', function submitForm() {
+                  console.log("Uploadinging image via pop up and selection")
+                  var imageFile = document.getElementById("dropfallback").files[0];
+                  uploadImage(imageFile);
+
+                  const s3 = new AWS.S3({
+                     apiVersion: '2006-03-01',
+                     params: {Bucket: 'clomask-output'}
+                   });
+
+                  // Sleep so that we wait for the mask to be generated on the output bucket
+                  sleep(30*1000).then(() => {
+                    const url = s3.getSignedUrl('getObject', {
+                      Bucket: 'clomask-output',
+                      Key: imageFile.name,
+                      Expires: 60*5
+                    })
+                    // TODO: Need to display mask after querying output bucket
+                    console.log(url);
+                    document.getElementById("maskedimage").innerHTML = "<img src=\"" + url + "\" />"
+                  })
+              });
+    }
+
+  </script>
+</html>
