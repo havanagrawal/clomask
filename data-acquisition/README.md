@@ -58,9 +58,11 @@ The tool was a bit flaky on Firefox. I would recommend Chrome for this.
 
   ![alt text](imgs_readme/select_dataset.png)
 
-- Step 5: Begin the labeling process. One way you can label is using the rectangle tool.![alt text](imgs_readme/labeling_using_rectangle.png)
+- Step 5: Begin the labeling process. One way you can label is using the rectangle tool to create bounding boxes.![alt text](imgs_readme/labeling_using_rectangle.png)
 
-You can also label using the the bitmap tool (the brush on the left hand toolbar). 
+You can also label using the the bitmap tool (the brush on the left hand toolbar) if you want to create masks instead of bounding boxes (observe the purple mask on the leaf).
+
+![alt text](imgs_readme/mask_supervisely.png)
 
 - Step 6: Repeat step 6 till all objects are labeled. 
 
