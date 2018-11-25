@@ -59,7 +59,7 @@ class ImageMask(object):
 
     @property
     def annotations(self):
-        return [x.text.strip() for x in imask.root.findall('object/name')]
+        return [x.text.strip() for x in self.root.findall('object/name')]
 
     def save_masks(self, output_dir=None):
         if not output_dir:
