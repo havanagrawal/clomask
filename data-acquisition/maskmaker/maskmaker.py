@@ -1,4 +1,5 @@
 import os
+from collections import defaultdict
 
 import xml.etree.ElementTree as ET
 import PIL.ImageDraw as ImageDraw
@@ -39,12 +40,18 @@ class ImageMask(object):
 
     @cached_property
     def polygons(self):
-        polygon_coords = []
-        polygons = [x.find('polygon') for x in self.root.findall('object')]
-        polygons = [p for p in polygons if p is not None]
+        polygon_coords = defaultdict(list)
+        objects = self.root.findall('object')
+        for o in objects:
+            polygon = self._make_polygon_from_xml(o.find('polygon'))
+            if not polygon:
+                continue
 
-        for poly in polygons:
-            polygon_coords.append(self._make_polygon_from_xml(poly))
+            obj_id = o.find("id").text.strip()
+            is_part_of = o.find("parts").find("ispartof").text
+
+            key = is_part_of or obj_id
+            polygon_coords[key].append(polygon)
 
         return polygon_coords
 
@@ -53,10 +60,11 @@ class ImageMask(object):
         if self._masks:
             return self._masks
 
-        for points in self.polygons:
+        for pointset in self.polygons.values():
             image = Image.new("RGBA", self.dim, self.img_color)
             draw = ImageDraw.Draw(image)
-            draw.polygon(list(points), fill=self.polygon_fill)
+            for points in pointset:
+                draw.polygon(list(points), fill=self.polygon_fill)
             self._masks.append(image)
 
         return self._masks
