@@ -4,6 +4,8 @@ import xml.etree.ElementTree as ET
 import PIL.ImageDraw as ImageDraw
 import PIL.Image as Image
 
+from cached_property import cached_property
+
 ################
 ### Defaults ###
 ################
@@ -23,7 +25,7 @@ class ImageMask(object):
         self.img_color = img_color
         self.polygon_fill = polygon_fill
 
-    @property
+    @cached_property
     def dim(self):
         nrows = int(self.root.find('imagesize/nrows').text)
         ncols = int(self.root.find('imagesize/ncols').text)
@@ -31,20 +33,22 @@ class ImageMask(object):
         # Image size is determined as width x height
         return ncols, nrows
 
-    @property
+    @cached_property
     def image_name(self):
         return self.root.find('filename').text
 
-    @property
+    @cached_property
     def polygons(self):
         polygon_coords = []
         polygons = [x.find('polygon') for x in self.root.findall('object')]
+        polygons = [p for p in polygons if p is not None]
+
         for poly in polygons:
             polygon_coords.append(self._make_polygon_from_xml(poly))
 
         return polygon_coords
 
-    @property
+    @cached_property
     def masks(self):
         if self._masks:
             return self._masks
@@ -57,7 +61,7 @@ class ImageMask(object):
 
         return self._masks
 
-    @property
+    @cached_property
     def annotations(self):
         return [x.text.strip() for x in self.root.findall('object/name')]
 
