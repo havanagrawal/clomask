@@ -1,4 +1,4 @@
-# GloMask - Mask R-CNN for Rigid/Non-Rigid Retail Consumables
+# CloMask - Mask R-CNN for Rigid/Non-Rigid Retail Consumables
 
 ## Table of Contents
 
