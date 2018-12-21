@@ -18,13 +18,14 @@ FILL = (255, 255, 255)
 IMG_COLOR = (255, 255, 255, 0)
 
 class ImageMask(object):
-    def __init__(self, xml_path, img_color=IMG_COLOR, polygon_fill=FILL):
+    def __init__(self, xml_path, img_color=IMG_COLOR, polygon_fill=FILL, img_format='PNG'):
         """Create an ImageMask instance from an XML path
         """
         self.root = ET.parse(xml_path)
         self._masks = []
         self.img_color = img_color
         self.polygon_fill = polygon_fill
+        self.img_format = img_format
 
     @cached_property
     def dim(self):
@@ -84,7 +85,7 @@ class ImageMask(object):
         for mask, annot in zip(self.masks, self.annotations):
             mask_file = self._mask_name(i, annot)
             mask_filepath = os.path.join(output_dir, mask_file)
-            mask.save(mask_filepath, 'PNG')
+            mask.save(mask_filepath, self.img_format)
             i += 1
 
     def __del__(self):
@@ -92,6 +93,9 @@ class ImageMask(object):
             mask.close()
 
     def _make_polygon_from_xml(self, xml_poly):
+        if not xml_poly:
+            return None
+
         x_points = [int(x.text.strip()) for x in xml_poly.findall('pt/x')]
         y_points = [int(y.text.strip()) for y in xml_poly.findall('pt/y')]
 
@@ -99,4 +103,4 @@ class ImageMask(object):
 
     def _mask_name(self, i, annot):
         """Create a pretty mask name. Assume we won't have more than 999 masks in an image"""
-        return str(i).rjust(3, "0") + "_" + annot + ".png"
+        return str(i).rjust(3, "0") + "_" + annot + "." + self.img_format.lower()

@@ -27,7 +27,9 @@ from maskmaker import ImageMask
 
 logging.basicConfig(format=logging.BASIC_FORMAT, level=logging.INFO)
 
+WHITE = (255, 255, 255)
 RED = (255, 0, 0)
+BLACK = (0, 0, 0)
 
 def get_masks_for(mask_path, image_id):
     """In case we have masks instead of polygons, return the mask file paths"""
@@ -79,7 +81,7 @@ def main(args):
         xml_filepath = os.path.join(annotation_path, img_id + ".xml")
 
         # Read the XML with polygons and generate masks
-        imask = ImageMask(xml_filepath, polygon_fill=RED)
+        imask = ImageMask(xml_filepath, img_color=BLACK, polygon_fill=WHITE)
 
         # Save mask files to appropriate location
         if not imask.polygons:
