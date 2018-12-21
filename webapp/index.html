@@ -56,7 +56,6 @@
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
               <ul class="navbar-nav mr-auto">
                 <li role="presentation" class="nav-item active"><a class="nav-link" href="#">Home</a></li>
-                <li role="presentation" class="nav-item"><a class="nav-link" href="./gallery.html">Gallery</a></li>
                 <li role="presentation" class="nav-item"><a class="nav-link" href="#">About</a></li>
                 <li role="presentation" class="nav-item"><a class="nav-link" href="https://github.com/havanagrawal/clomask">GitHub</a></li>
                 <li role="presentation" class="nav-item"><div class="g-signin2" data-onsuccess="onSignIn"></div></li>
@@ -73,10 +72,24 @@
       <div class="jumbotron" id="imagedrop">
 
           <input name="file" type="file" id="dropfallback" style="display: none;" />
-
           <h1>Upload File</h1>
           <p class="lead"><i id="uploadicon" class="fas fa-upload"></i>Upload (or Drag and Drop File Here)</p>
       </div>
+      <div class="row">
+        <div class="col-md-1">
+          <div class="row">
+            <!-- Hovering over this should show the masks -->
+            <div class="col-md-1">
+              <img id="masked" src="http://cocodataset.org/images/cocoicons/44.jpg" width="25px"/>
+            </div>
+            <!-- Hovering over this should hide the masks -->
+            <div class="col-md-1">
+              <img id="original" src="http://cocodataset.org/images/cocoicons/blank.jpg" width="25px"/>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div id="maskedimage">
 
       </div>
@@ -114,6 +127,16 @@
   </body>
 
   <script>
+    const urls = {};
+
+    $("#masked").hover(function() {
+      document.getElementById("output").src = urls["masked"]
+    })
+
+    $("#original").hover(function() {
+      document.getElementById("output").src = urls["original"]
+    })
+
     function sleep(sec) {
       return new Promise(resolve => setTimeout(resolve, 1000*sec));
     }
@@ -158,8 +181,12 @@
           })
           console.log(url);
 
+          urls["masked"] = url
+          // Hacky way of getting original image URL
+          urls["original"] = url.replace("output", "input").split("?")[0]
+
           // Attach the image to the HTML
-          document.getElementById("maskedimage").innerHTML = "<img src=\"" + url + "\" />"
+          document.getElementById("maskedimage").innerHTML = "<img width=\"600\" height=\"800\" id=\"output\" src=\"" + url + "\" />"
         }
       });
     }

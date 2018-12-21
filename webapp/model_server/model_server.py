@@ -11,7 +11,10 @@ import boto3
 from config import *
 from coco_model import CocoModel
 
-MODEL = CocoModel()
+# For now, we want to detect only bottles
+ITEMSET = ['bottle']
+
+MODEL = CocoModel(items=ITEMSET)
 MODEL.load()
 
 SQS_QUEUE = boto3.resource("sqs").Queue(SQS_URL)
@@ -68,7 +71,7 @@ def main():
         logging.info("Uploaded %s to S3", s3_image_key)
 
         # Cleanup files
-        cleanup(s3_image_key)
+        # cleanup(s3_image_key)
         logging.info("Cleaned up local files")
 
         # Delete from queue, so that we don't reprocess it

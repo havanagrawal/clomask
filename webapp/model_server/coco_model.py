@@ -10,6 +10,7 @@ import matplotlib
 import matplotlib.pyplot as plt
 
 from model_api import Model
+from imutils import post_process
 
 # Root directory of the project
 ROOT_DIR = os.path.abspath("Mask_RCNN")
@@ -62,13 +63,37 @@ class_names = ['BG', 'person', 'bicycle', 'car', 'motorcycle', 'airplane',
                'teddy bear', 'hair drier', 'toothbrush']
 
 
+def filter_results(r, itemset):
+    allowed_indices = [class_names.index(item) for item in itemset]
+    filter_mask = np.isin(r['class_ids'], allowed_indices)
+    r['rois'] = r['rois'][filter_mask, :]
+    r['scores'] = r['scores'][filter_mask]
+    r['class_ids'] = r['class_ids'][filter_mask]
+    r['masks'] = r['masks'][:, :, filter_mask]
+
+    return r
+
+
 class CocoModel(Model):
-    def __init__(self):
+    def __init__(self, items=None):
+        """Initialize the Coco Model
+
+        Arguments
+        ---------
+        items: list-like
+            Only items from this list will be annotated, and the rest will be discarded.
+            If not provided, all masks are generated.
+        """
         super().__init__("Coco")
         config = InferenceConfig()
 
         # Create model object in inference mode.
         self.model = modellib.MaskRCNN(mode="inference", model_dir=MODEL_DIR, config=config)
+
+        # Default to all classes in case no filter is provided
+        if not items:
+            items = class_names
+        self.items = list(items)
 
     def load(self, filepath=None):
         self.model.load_weights(COCO_MODEL_PATH, by_name=True)
@@ -76,14 +101,24 @@ class CocoModel(Model):
     def create_mask(self, filepath, output_dir):
         output_path = output_dir + "/" + os.path.basename(filepath)
         image = skimage.io.imread(filepath)
+        print(image.shape)
 
         # Run detection
         results = self.model.detect([image], verbose=1)
 
         # Visualize results
         r = results[0]
+        r = filter_results(r, self.items)
+
         visualize.display_instances(image, r['rois'], r['masks'], r['class_ids'],
-                                    class_names, r['scores'], figsize=(8, 6), savepath=output_path)
+                                    class_names, r['scores'],
+                                    show_label=False, show_bbox=False,
+                                    figsize=(8, 8), savepath=output_path)
+
+        out = skimage.io.imread(output_path)
+        skimage.io.imsave("tmp.jpg", out)
+        out = post_process(out)
+        skimage.io.imsave(output_path, out)
 
         return output_path
 
