@@ -40,11 +40,8 @@ There are two tools that looks promising for manually marking the Masks:
 **Notes**  
 The tool was a bit flaky on Firefox. I would recommend Chrome for this.
 
-
-### Supervisely Workflow
- Will be added by Tejas.
-
-
+### Mask generation
+Individual masks will be generated from the annotations using the maskmaker module.
 
 ### Datastore
 The annotated data will be store in a common location, probably a drive or in an S3 bucket. We can make this decision later.
