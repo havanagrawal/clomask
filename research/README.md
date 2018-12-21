@@ -5,5 +5,3 @@
 Current Research work has been around exploring and setting up validation setup for clomask using pre-defined validation images using [matterport](https://github.com/matterport/Mask_RCNN) implimentation. 
 
 Current validation setup is measured against mAP which is defined as average of the maximum precisions at different recall values and is benchmarked at **0.539** based on the validation process explored in the [clomask_notebook](https://github.com/havanagrawal/clomask/blob/validation_setup/research/clomask_notebook.ipynb).
-
-## Current validation result
