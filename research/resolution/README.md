@@ -24,6 +24,8 @@ Reducing pixel resolution has limited effect on performance. We see insignifican
 
 The original image for this analysis had a `height = 2826`, and a `width = 4224`.
 
+**Note** that the axes on the original images (on the right) have different scales, indicating different pixel resolutions.
+
 * At `0.0125w x 0.0125h` (35x52)
 ![35x52](./pixel/35x52.jpg)
 * At `0.025w x 0.025h` (70x105)
@@ -44,6 +46,8 @@ To simulate lower spatial resolution, the image is first reduced to a smaller pi
 We use the term `scale factor` to describe how small the image was made before rescaling it back. A `scale factor = 0.01` would mean our image is first scaled to `282 x 422`, and then scaled back to `2826 x 4224`.
 
 The original image for this analysis had a `height = 2826`, and a `width = 4224`.
+
+**Note** that the axes on the original images (on the right) have the same scale, indicating that they all have the same pixel resolution, but vary in quality.
 
 * At `0.01` scale factor:
 ![0.01](./spatial/0.01.jpg)
