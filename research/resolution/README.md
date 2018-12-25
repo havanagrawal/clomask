@@ -18,6 +18,14 @@ Prediction on the same image can sometimes result in different masks, and conseq
 
 ## Results
 
+The images on the left are the result of the model, with the following legend:
+
+ * Green: Ground Truth/Actual Masks
+ * Red: Predicted Masks
+ * Numbers: Score/IoU. Score is the probability of the mask being a bottle, and the IoU is the intersection over union score of the mask with the ground truth mask.
+
+The images on the right are the input images to the model. Note the axes for both of the following sections.
+
 ### Pixel
 
 Reducing pixel resolution has limited effect on performance. We see insignificant changes in the mAP when reducing the resolution, even when reduced to ~10% of its original dimensions. However, making it smaller than ~100x100 deteriorates the performance significantly.
