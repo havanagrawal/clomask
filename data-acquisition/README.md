@@ -1,14 +1,22 @@
 # Data Acquisition and Curation
 
-**Owner**: [Vishnu Nandakumar](https://github.com/vivanvish)  
+**Owner**: [Vishnu Nandakumar](https://github.com/vivanvish)  and [Tejas Hosangadi](https://github.com/tejasmhos)
 
-### Overview
+## Table of Contents
+
+- [Overview](#overview)
+- [Labeling](#labeling)
+- [LabelMe Workflow](#labelme)
+- [Supervisely Workflow](#supervisely)
+- [Datastore](#datastore)
+
+### <a name="overview"></a>Overview
 Even though the pretrained model gives decent results for recognizing bottles, it falters when the bottles are aligned differently. So to tackle this we need to train the model again on augmented images.
 
 The images have been collected from google images, using this package: [google-images-download
 ](https://github.com/hardikvasa/google-images-download). 
 
-### Labeling
+### <a name=labeling"></a>Labeling
 There are two tools that looks promising for manually marking the Masks:
 - [LabelMe](http://labelme.csail.mit.edu/Release3.0/)
     - OpenSource
@@ -19,7 +27,7 @@ There are two tools that looks promising for manually marking the Masks:
     - Supports multiple image formats.
     - Annotations can be exported in multiple formats.
 **IMP**: Irrespective of the tool we use, the each individual mask should be named as **bottle**. 
-### LabelMe Workflow
+### <a name="labelme"></a>LabelMe Workflow
 - Step 1: Create an account.
 - Step 2: Create a collection (named bottles or something.)  
 ![alt text](imgs_readme/create_collection.jpg)
@@ -43,7 +51,7 @@ There are two tools that looks promising for manually marking the Masks:
 The tool was a bit flaky on Firefox. I would recommend Chrome for this.
 
 
-### Supervisely Workflow
+### <a name="supervisely"></a>Supervisely Workflow
 - Step 1: Create an account.
 
 - Step 2: Drag a folder containing the images to be labelled into the upload dropbox. These are the images that will be labelled using the Supervisely platform. 
@@ -78,6 +86,6 @@ You can also label using the the bitmap tool (the brush on the left hand toolbar
 
   ![alt text](imgs_readme/download_result.png)
 
-### Datastore
+### <a name="datastore"></a>Datastore
 
 The annotated data will be store in a common location, probably a drive or in an S3 bucket. We can make this decision later.
