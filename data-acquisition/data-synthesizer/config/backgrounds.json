@@ -1,0 +1,23 @@
+{
+    "large_shelf_stock": {
+        "shelf_y_positions": [
+            816,
+            1176,
+            1536,
+            1900,
+            2256
+        ],
+        "shelf_region": [
+            [
+                500,
+                500
+            ],
+            [
+                3900,
+                2556
+            ]
+        ],
+        "num_shelves": 5,
+        "shelf_ht": 310
+    }
+}

@@ -1,0 +1,16 @@
+{
+    "bottles": {
+        "bottle_1": {
+            "width": 188,
+            "height": 500
+        },
+        "bottle_3": {
+            "width": 86,
+            "height": 272
+        },
+        "bottle_2": {
+            "width": 124,
+            "height": 438
+        }
+    }
+}
