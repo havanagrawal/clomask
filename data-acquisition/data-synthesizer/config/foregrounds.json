@@ -11,6 +11,58 @@
         "bottle_2": {
             "width": 124,
             "height": 438
+        },
+        "bottle_4": {
+            "height": 355,
+            "width": 132
+        },
+        "bottle_5": {
+            "height": 388,
+            "width": 118
+        },
+        "bottle_6": {
+            "height": 450,
+            "width": 150
+        },
+        "bottle_7": {
+            "height": 478,
+            "width": 172
+        },
+        "bottle_8": {
+            "height": 650,
+            "width": 240
+        },
+        "bottle_9": {
+            "height": 488,
+            "width": 185
+        },
+        "bottle_10": {
+            "height": 645,
+            "width": 220
+        },
+        "bottle_11": {
+            "height": 800,
+            "width": 230
+        },
+        "bottle_12": {
+            "height": 1140,
+            "width": 400
+        },
+        "bottle_13": {
+            "height": 447,
+            "width": 146
+        },
+        "bottle_14": {
+            "height": 500,
+            "width": 130
+        },
+        "bottle_15": {
+            "height": 370,
+            "width": 95
+        },
+        "bottle_16": {
+            "height": 600,
+            "width": 180
         }
     }
 }
