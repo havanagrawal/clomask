@@ -1,5 +1,6 @@
 """
-Script to pre process masks file and convert to H5 files creating stiched masks for faster training time
+Script to pre process mask files and convert to H5 files creating stiched masks and mask label list
+for faster training time and multiclassification.
 """
 
 from config import *
