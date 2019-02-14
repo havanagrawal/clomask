@@ -1,3 +1,7 @@
+"""
+Script to pre process masks file and convert to H5 files creating stiched masks for faster training time
+"""
+
 from config import *
 import time
 import numpy as np
