@@ -319,8 +319,12 @@ ROOT_DIR = '../mask_data/'
 # Directory to save logs and trained model weights for tensorboard visualization and prediction.
 MODEL_DIR = '../mask_data/logs'
 
-TRAIN_PATH = '../data/train_image/'
+TRAIN_PATH = '../mask_data/train_image/'
+
+TEST_PATH = '../mask_data/test_image/'
 
 IMAGE_PATH = '/train_image/'
 
 MASK_PATH = '/train_mask/'
+
+COCO_PATH = '../mask_data/mask_rcnn_coco.h5'
