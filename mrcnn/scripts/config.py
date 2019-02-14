@@ -22,7 +22,6 @@ import pandas as pd
 from skimage.color import rgb2hed
 from skimage.exposure import rescale_intensity
 from scipy.ndimage.morphology import binary_fill_holes
-from tqdm import tqdm
 
 
 class Config(object):
@@ -101,7 +100,7 @@ class Config(object):
 
     # How many anchors per image to use for RPN training
     RPN_TRAIN_ANCHORS_PER_IMAGE = 256
-    
+
     # ROIs kept after tf.nn.top_k and before non-maximum suppression
     PRE_NMS_LIMIT = 6000
 
@@ -320,3 +319,8 @@ ROOT_DIR = '../mask_data/'
 # Directory to save logs and trained model weights for tensorboard visualization and prediction.
 MODEL_DIR = '../mask_data/logs'
 
+TRAIN_PATH = '../data/train_image/'
+
+IMAGE_PATH = '/train_image/'
+
+MASK_PATH = '/train_mask/'
