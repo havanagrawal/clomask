@@ -25,8 +25,6 @@ class ClomaskDataset(utils.Dataset):
         # Add classes
         for val in class_mapping.keys():
             self.add_class('clomask', val, class_mapping[val])
-        # self.add_class('clomask', 2, "boxes")
-        # self.add_class('clomask', 3, "bags")
         self.train_path = train_path
         # Add images
         for i, id_ in enumerate(id_list):
@@ -78,19 +76,18 @@ class ClomaskDataset(utils.Dataset):
         else:
             path = self.train_path + info['img_name']
             mask = []
-            label_array = []
+            class_ids = []
             for mask_file in next(os.walk(path + MASK_PATH))[2]:
                 if 'png' in mask_file:
                         # these lines have been commented out due to invalid test data file name
-                        # class_id = int(mask_file.split('$')[1][:-4])
-                        # label_array.append(class_id)
+                        class_id = int(mask_file.split('__')[1][:-4])
+                        class_ids.append(class_id)
                         mask_ = cv2.imread(path + MASK_PATH + mask_file, 0)
                         mask_ = np.where(mask_ > 128, 1, 0)
                         # Add mask only if its area is larger than one pixel
                         if np.sum(mask_) >= 1:
                             mask.append(np.squeeze(mask_))
             mask = np.stack(mask, axis=-1)
-            class_ids = np.ones(mask.shape[2])
         return mask.astype(np.uint8), class_ids.astype(np.int8)
 
 
@@ -121,7 +118,6 @@ class ClomaskTrain(object):
         train_data = ClomaskDataset()
         train_data.load_shapes(train_list, TRAIN_PATH)
         train_data.prepare()
-        print(train_data.class_names)
 
         # initialize validation dataset
         validation_data = ClomaskDataset()

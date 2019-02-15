@@ -27,7 +27,7 @@ def mask_to_h5(train_path):
         label_array = []
         for mask_file in next(os.walk(path + MASK_PATH))[2]:
             if 'png' in mask_file:
-                    class_id = int(mask_file.split('$')[1][:-4])
+                    class_id = int(mask_file.split('__')[1][:-4])
                     label_array.append(class_id)
                     mask_ = cv2.imread(path + MASK_PATH + mask_file, 0)
                     i += 1
