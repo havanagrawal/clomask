@@ -8,6 +8,7 @@ from imgaug import augmenters as iaa
 from sklearn.model_selection import train_test_split
 from random import randint
 import numpy as np
+import json
 
 
 class ClomaskDataset(utils.Dataset):
@@ -19,10 +20,13 @@ class ClomaskDataset(utils.Dataset):
         """
            Initialize the class with dataset info.
         """
+        with open(ROOT_DIR + 'id_map.json') as mapping_file:
+            class_mapping = (json.load(mapping_file))
         # Add classes
-        self.add_class('clomask', 1, "bottles")
-        self.add_class('clomask', 2, "boxes")
-        self.add_class('clomask', 3, "bags")
+        for val in class_mapping.keys():
+            self.add_class('clomask', val, class_mapping[val])
+        # self.add_class('clomask', 2, "boxes")
+        # self.add_class('clomask', 3, "bags")
         self.train_path = train_path
         # Add images
         for i, id_ in enumerate(id_list):
@@ -117,6 +121,7 @@ class ClomaskTrain(object):
         train_data = ClomaskDataset()
         train_data.load_shapes(train_list, TRAIN_PATH)
         train_data.prepare()
+        print(train_data.class_names)
 
         # initialize validation dataset
         validation_data = ClomaskDataset()
