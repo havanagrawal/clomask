@@ -64,5 +64,38 @@
             "height": 600,
             "width": 180
         }
+    },
+	"boxes": {
+        "boxes_1": {
+            "height": 280,
+            "width": 198
+        },
+        "boxes_2": {
+            "height": 280,
+            "width": 190
+        },
+        "boxes_11": {
+            "height": 280,
+            "width": 195
+        }
+    },
+    "bags": {
+        "bag1": {
+            "height": 256,
+            "width": 190
+        },
+        "bag2": {
+            "height": 395,
+            "width": 370
+        },
+        "bag3": {
+            "height": 355,
+            "width": 260
+        },
+        "bag4": {
+            "height": 418,
+            "width": 488
+        }
     }
+	
 }
