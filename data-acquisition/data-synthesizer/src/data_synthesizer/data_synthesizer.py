@@ -1,17 +1,24 @@
-import json
-import numpy as np
+"""Synthesize image data along with masks using preconfigured image templates"""
+
 import os
-from PIL import Image
+import json
+import time
 import queue
 import random
-import time
+from enum import Enum
 from threading import Thread
 
-OBJ_SIZE_MAP = {
-    "s": 0.6,
-    "m": 0.75,
-    "l": 0.9
-}
+import numpy as np
+from PIL import Image
+
+
+class ObjectSize(float, Enum):
+    SMALL = 0.6
+    MEDIUM = 0.75
+    LARGE = 0.9
+
+
+OBJECT_SIZES = list(ObjectSize)
 
 
 class DataSynthesizer:
@@ -20,32 +27,29 @@ class DataSynthesizer:
         self.config_path = config_path
         self.data_path = data_path
         self.template_path = template_path
+
         with open(self.config_path + "/backgrounds.json") as bg_conf_file:
             self.bg_conf = json.load(bg_conf_file)
-        self.bg_labels = list(self.bg_conf.keys())
+
         with open(self.config_path + "/foregrounds.json") as fg_conf_file:
             self.fg_conf = json.load(fg_conf_file)
-        
+
         with open(self.config_path + "/class_map.json") as class_map_file:
             self.class_map = json.load(class_map_file)
 
-    def _get_new_image_size(
-            self, curr_obj_conf, obj_sizes_allowed, shelf_ht):
+        self.bg_labels = list(self.bg_conf.keys())
 
-        curr_fg_obj_size = np.random.choice(obj_sizes_allowed, 1)[0]
-        new_obj_ht = int(shelf_ht * OBJ_SIZE_MAP[curr_fg_obj_size])
-        new_obj_width = int(
-            (new_obj_ht/curr_obj_conf["height"])*curr_obj_conf["width"])
+    def _get_new_image_size(self, curr_obj_conf, obj_size, shelf_height):
+        cur_height, cur_width = curr_obj_conf["height"], curr_obj_conf["width"]
+        new_height = int(shelf_height * obj_size)
+        new_width = int((new_height / cur_height) * cur_width)
 
-        new_img_size = (new_obj_width, new_obj_ht)
-
-        return new_img_size
+        return (new_width, new_height)
 
     def _get_fg_and_conf(self, categories):
-
-        curr_fg_category = np.random.choice(categories, 1)[0]
+        curr_fg_category = random.choice(categories)
         curr_fg_category_objs = list(self.fg_conf[curr_fg_category].keys())
-        curr_fg_obj = np.random.choice(curr_fg_category_objs, 1)[0]
+        curr_fg_obj = random.choice(curr_fg_category_objs)
         curr_obj_conf = self.fg_conf[curr_fg_category][curr_fg_obj]
         fg_class_id = self.class_map[curr_fg_category]
 
@@ -56,7 +60,7 @@ class DataSynthesizer:
         return curr_obj_file, curr_obj_conf, fg_class_id
 
     def _get_bg_and_conf(self):
-        curr_bg_label = np.random.choice(self.bg_labels, 1)[0]
+        curr_bg_label = random.choice(self.bg_labels)
         curr_bg_conf = self.bg_conf[curr_bg_label]
         curr_bg_file = (
             self.template_path + "/backgrounds/{bg}.jpg").format(
@@ -67,7 +71,7 @@ class DataSynthesizer:
             self, shelf, bg_conf, bg_file, image_path, categories, rot_pc,
             obj_sizes_allowed, max_objs_in_pack, max_offset):
         """
-        Target function for parallely processing each individual shelf. 
+        Target function for parallely processing each individual shelf.
         """
         shelf_region = bg_conf["shelf_region"]
         x_start, x_end = shelf_region[0][0], shelf_region[1][0]
@@ -81,16 +85,14 @@ class DataSynthesizer:
         num_obj = 0
 
         paste_pos = (x_start, 0)
-        while paste_pos[0]  < x_end:
+        while paste_pos[0] < x_end:
             fg_file, fg_conf, fg_id = self._get_fg_and_conf(categories)
-            new_size = self._get_new_image_size(
-                fg_conf, obj_sizes_allowed, shelf_ht)
+            obj_size = random.choice(obj_sizes_allowed)
+            new_size = self._get_new_image_size(fg_conf, obj_size, shelf_ht)
             fg_img = Image.open(fg_file)
             fg_img = fg_img.resize(new_size, Image.LANCZOS)
 
-            num_instances = np.random.choice(max_objs_in_pack, 1)[0]
-
-            for _ in range(num_instances):
+            for _ in range(max_objs_in_pack):
                 num_obj += 1
                 is_rotated = np.random.binomial(1, p=rot_pc)
                 to_paste = fg_img
@@ -100,12 +102,10 @@ class DataSynthesizer:
 
                 img_size = to_paste.size
                 alpha_mask = to_paste.getchannel(3)
-                paste_pos = (paste_pos[0],
-                             shelf_positions[shelf]-img_size[1])
-                
+                paste_pos = (paste_pos[0], shelf_positions[shelf]-img_size[1])
+
                 if paste_pos[0] + img_size[0] > x_end:
-                    paste_pos = (paste_pos[0]+img_size[0],
-                        shelf_positions[shelf])
+                    paste_pos = (paste_pos[0] + img_size[0], shelf_positions[shelf])
                     break
 
                 new_fg = empty_fg.copy()
@@ -116,9 +116,9 @@ class DataSynthesizer:
 
                 shelf_alpha_mask.paste(alpha_mask, paste_pos)
 
-                new_alpha_mask.save(
-                    image_path + "/train_mask/mask_{}{}${}.png".format(
-                        shelf, num_obj, fg_id))
+                image_filepath = image_path + "/train_mask/mask_{}{}${}.png".format(shelf, num_obj, fg_id)
+                new_alpha_mask.save(image_filepath)
+
                 bg_img = Image.composite(new_fg, bg_img,
                                          new_alpha_mask)
                 x_offset = np.random.randint(1, max_offset, 1)[0]
@@ -132,26 +132,31 @@ class DataSynthesizer:
 
     def generate_synthetic_dataset(
             self, n, categories=["bottles"], rot_pc=[0.1], x_offset=1,
-            obj_sizes_allowed=["s", "m", "l"], max_objs_in_pack=3):
+            obj_sizes_allowed=OBJECT_SIZES, max_objs_in_pack=3):
         """
-            The synthesizer takes the following parameters:
-            n: integer specifying the number of images to be generated.
+            Synthesize an image dataset
 
-            categories (default: ["bottles"]): An array specifying the 
-                categories from which objects will be selected. Should 
+            Arguments
+            ---------
+            n: int
+                the number of images to be generated.
+
+            categories: list, default: ["bottles"]
+                a list of categories from which objects will be selected. Should
                 match the keys in the foreground config file.
 
-            rot_pc (default=[0.1]): Proportion of rotated images
+            rot_pc: list, default=[0.1]:
+                Proportion of rotated images
 
-            x_offset (default=1 px): Integer value specifying the number of
-                pixels present between two images.
+            x_offset: int, default=1
+                number of pixels present between two images.
 
-            obj_sizes_allowed (default=[["s", "m", "l"]]): An array specifying
+            obj_sizes_allowed: list, default=OBJECT_SIZES
                 the allowed variation in sizes for the objects.
                 (s=small, m=medium and l=large)
 
-            max_objs_in_pack (default=3): Max number of objects in a pack 
-                (appearing consecutively).
+            max_objs_in_pack: int, default=3
+                Maximum number of objects in a pack (appearing consecutively).
         """
 
         timestamp = time.strftime("%Y_%m_%d_%H_%M_%S", time.gmtime())
@@ -159,7 +164,7 @@ class DataSynthesizer:
         save_path = self.data_path + dataset_name
         os.mkdir(save_path)
         with open(save_path + "/id_map.json", "w") as id_file:
-            id_class_map = {v:k for k,v in self.class_map.items()}
+            id_class_map = {v:k for k, v in self.class_map.items()}
             json.dump(id_class_map, id_file, indent=4)
 
         for i in range(n):
@@ -172,7 +177,7 @@ class DataSynthesizer:
             print("Generating image {i} of {n}".format(i=i+1, n=n))
             bg_file, bg_conf = self._get_bg_and_conf()
             num_shelves = bg_conf["num_shelves"]
-            rot = np.random.choice(rot_pc, 1)[0]
+            rot = random.choice(rot_pc)
             que = queue.Queue()
             threads = []
             args = {
@@ -206,8 +211,7 @@ class DataSynthesizer:
                 if bg_img is None:
                     bg_img = shelf_img.copy()
                 else:
-                    bg_img = Image.composite(shelf_img, bg_img,
-                                             shelf_mask)
+                    bg_img = Image.composite(shelf_img, bg_img, shelf_mask)
             bg_img.save(
                 image_path + "/train_image/{}.png".format(image_name))
 
