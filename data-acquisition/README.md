@@ -15,7 +15,7 @@
 Even though the pretrained model gives decent results for recognizing bottles, it falters when the bottles are aligned differently. So to tackle this we need to train the model again on augmented images.
 
 The images have been collected from google images, using this package: [google-images-download
-](https://github.com/hardikvasa/google-images-download). 
+](https://github.com/hardikvasa/google-images-download).
 
 ### <a name=labeling"></a>Labeling
 There are two tools that looks promising for manually marking the Masks:
@@ -27,7 +27,7 @@ There are two tools that looks promising for manually marking the Masks:
     - Free and Paid version.
     - Supports multiple image formats.
     - Annotations can be exported in multiple formats.
-**IMP**: Irrespective of the tool we use, the each individual mask should be named as **bottle**. 
+**IMP**: Irrespective of the tool we use, the each individual mask should be named as **bottle**.
 ### <a name="labelme"></a>LabelMe Workflow
 - Step 1: Create an account.
 - Step 2: Create a collection (named bottles or something.)  
@@ -36,7 +36,7 @@ There are two tools that looks promising for manually marking the Masks:
 ![alt text](imgs_readme/add_pics.jpg)
 - Step 4: If you click on any images there, you will be taken to the annotation tool. From the toolbar on the left, select the polygon tool (highlighted).
 ![alt text](imgs_readme/polytool.png)
--  Step 5: Draw the mask by drawing the approximate boundary over the object. 
+-  Step 5: Draw the mask by drawing the approximate boundary over the object.
 ![alt text](imgs_readme/mark_boundary.png)
 - Step 6: Save the mask by clicking **Done**. Since we are going to mark only bottles, make sure that the name for all masks is **bottle**.
 ![alt text](imgs_readme/save_mask.png)
@@ -53,7 +53,7 @@ The tool was a bit flaky on Firefox. I would recommend Chrome for this.
 ### <a name="supervisely"></a>Supervisely Workflow
 - Step 1: Create an account.
 
-- Step 2: Drag a folder containing the images to be labelled into the upload dropbox. These are the images that will be labelled using the Supervisely platform. 
+- Step 2: Drag a folder containing the images to be labelled into the upload dropbox. These are the images that will be labelled using the Supervisely platform.
 
   ![alt text](imgs_readme/upload_supervisely.png)
 
@@ -71,13 +71,13 @@ You can also label using the the bitmap tool (the brush on the left hand toolbar
 
 ![alt text](imgs_readme/mask_supervisely.png)
 
-- Step 6: Repeat step 6 till all objects are labeled. 
+- Step 6: Repeat step 6 till all objects are labeled.
 
-- Step 7: When you are done and ready to download the data, go back to the project page and click the three dots lined up to form a vertical line. You have three options, you can download as JSON, masks or transform. 
+- Step 7: When you are done and ready to download the data, go back to the project page and click the three dots lined up to form a vertical line. You have three options, you can download as JSON, masks or transform.
 
   ![alt text](imgs_readme/start_download_process.png)
 
-- Step 8: Regardless of the option that you choose, you will be directed to a page where you will be prompted to start the DTL process. Hit start on this page. 
+- Step 8: Regardless of the option that you choose, you will be directed to a page where you will be prompted to start the DTL process. Hit start on this page.
 
   ![alt text](imgs_readme/start_process_dtl.png)
 
@@ -92,3 +92,7 @@ Individual masks will be generated from the annotations using the maskmaker modu
 ###  <a name="datastore"></a>Datastore
 
 The annotated data will be store in a common location, probably a drive or in an S3 bucket. We can make this decision later.
+
+### Attributions
+
+The [./data-synthesizer/img_templates/backgrounds/blue_vector_shelf.jpg](blue vector shelf) image has been downloaded from [www.freevector.com](www.freevector.com)
