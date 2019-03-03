@@ -1,3 +1,7 @@
+"""Representation for slanted shelf co-ordinates and geometry
+
+    Perform computations on shelf and shelf-region configurations.
+"""
 from itertools import tee
 
 class Point:
@@ -26,7 +30,7 @@ class ShelfRegion:
         2 |______________|
         3 |______________|
 
-        In this case, lines 0 and 1 together encapsulate one shelf.
+        In this case, lines 0 and 1 together encapsulate one shelf region.
     """
     def __init__(self, top_line, bottom_line):
         self.top_line = top_line
@@ -37,7 +41,7 @@ class ShelfRegion:
 
     @property
     def x_start(self):
-        return min(self.top_line.start.x, self.bottom_line.start.x)
+        return max(self.top_line.start.x, self.bottom_line.start.x)
 
     @property
     def x_end(self):
