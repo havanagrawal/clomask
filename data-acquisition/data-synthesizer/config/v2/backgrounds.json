@@ -1,0 +1,138 @@
+{
+  "large_shelf_stock": {
+    "shelves": [
+      {
+        "x_start": 125,
+        "y_start": 135,
+        "x_end": 1025,
+        "y_end": 135
+      },
+      {
+        "x_start": 125,
+        "y_start": 207,
+        "x_end": 1025,
+        "y_end": 207
+      },
+      {
+        "x_start": 125,
+        "y_start": 298,
+        "x_end": 1025,
+        "y_end": 298
+      },
+      {
+        "x_start": 125,
+        "y_start": 391,
+        "x_end": 1025,
+        "y_end": 391
+      },
+      {
+        "x_start": 125,
+        "y_start": 483,
+        "x_end": 1025,
+        "y_end": 483
+      },
+      {
+        "x_start": 125,
+        "y_start": 573,
+        "x_end": 1025,
+        "y_end": 573
+      }
+    ]
+  },
+  "small_shelf_stock": {
+    "shelves": [
+      {
+        "x_start": 100,
+        "y_start": 0,
+        "x_end": 700,
+        "y_end": 0
+      },
+      {
+        "x_start": 100,
+        "y_start": 157,
+        "x_end": 700,
+        "y_end": 157
+      },
+      {
+        "x_start": 100,
+        "y_start": 341,
+        "x_end": 700,
+        "y_end": 341
+      },
+      {
+        "x_start": 100,
+        "y_start": 525,
+        "x_end": 700,
+        "y_end": 525
+      },
+      {
+        "x_start": 100,
+        "y_start": 710,
+        "x_end": 700,
+        "y_end": 710
+      },
+      {
+        "x_start": 100,
+        "y_start": 887,
+        "x_end": 700,
+        "y_end": 887
+      }
+    ]
+  },
+  "blue_vector_shelf": {
+    "shelves": [
+      {
+        "x_start": 77,
+        "y_start": 403,
+        "x_end": 1180,
+        "y_end": 403
+      },
+      {
+        "x_start": 77,
+        "y_start": 603,
+        "x_end": 1180,
+        "y_end": 603
+      },
+      {
+        "x_start": 200,
+        "y_start": 1003,
+        "x_end": 2055,
+        "y_end": 1003
+      }
+    ]
+  },
+  "supermarket_shelf_1": {
+    "shelves": [
+      {
+        "x_start": 0,
+        "y_start": 0,
+        "x_end": 400,
+        "y_end": 84
+      },
+      {
+        "x_start": 0,
+        "y_start": 80,
+        "x_end": 400,
+        "y_end": 111
+      },
+      {
+        "x_start": 0,
+        "y_start": 162,
+        "x_end": 400,
+        "y_end": 148
+      },
+      {
+        "x_start": 0,
+        "y_start": 230,
+        "x_end": 400,
+        "y_end": 182
+      },
+      {
+        "x_start": 0,
+        "y_start": 324,
+        "x_end": 400,
+        "y_end": 229
+      }
+    ]
+  }
+}
