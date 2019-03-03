@@ -4,6 +4,7 @@ import os
 import json
 import time
 from enum import Enum
+from collections import namedtuple
 
 import numpy as np
 from PIL import Image
@@ -16,6 +17,9 @@ class ObjectSize(float, Enum):
 
 
 OBJECT_SIZES = list(ObjectSize)
+
+
+PasteLocation = namedtuple("PasteLocation", ["x", "y"])
 
 
 class DataSynthesizer:
@@ -106,8 +110,8 @@ class DataSynthesizer:
         shelf_alpha_mask = empty_alpha_mask.copy()
         num_obj = 0
 
-        paste_pos = (x_start, 0)
-        while paste_pos[0] < x_end:
+        paste_pos = PasteLocation(x_start, 0)
+        while paste_pos.x < x_end:
             fg_file, fg_conf, fg_id = self._get_fg_and_conf(categories)
             obj_size = self.rng.choice(obj_sizes_allowed)
             new_size = self._get_new_image_size(fg_conf, obj_size, shelf_ht)
@@ -119,14 +123,14 @@ class DataSynthesizer:
                 is_rotated = self.rng.binomial(1, p=rot_pc)
                 to_paste = fg_img
                 if is_rotated:
-                    to_paste = fg_img.rotate(self.rng.randint(-90, 90), expand=1)
+                    to_paste = to_paste.rotate(self.rng.randint(-90, 90), expand=1)
 
-                img_size = to_paste.size
+                width, height = to_paste.size
                 alpha_mask = to_paste.getchannel(3)
-                paste_pos = (paste_pos[0], shelf_positions[shelf] - img_size[1])
+                paste_pos = PasteLocation(paste_pos.x, shelf_positions[shelf] - height)
 
-                if paste_pos[0] + img_size[0] > x_end:
-                    paste_pos = (paste_pos[0] + img_size[0], shelf_positions[shelf])
+                if paste_pos.x + width > x_end:
+                    paste_pos = PasteLocation(paste_pos.x + width, shelf_positions[shelf])
                     break
 
                 new_fg = empty_fg.copy()
@@ -140,13 +144,11 @@ class DataSynthesizer:
                 image_filepath = image_path + "/train_mask/mask_{}{}${}.png".format(shelf, num_obj, fg_id)
                 new_alpha_mask.save(image_filepath)
 
-                bg_img = Image.composite(new_fg, bg_img,
-                                         new_alpha_mask)
+                bg_img = Image.composite(new_fg, bg_img, new_alpha_mask)
                 x_offset = self.rng.randint(1, max_offset, 1)[0]
-                paste_pos = (paste_pos[0]+img_size[0]+x_offset,
-                             shelf_positions[shelf])
+                paste_pos = PasteLocation(paste_pos.x + width + x_offset, shelf_positions[shelf])
 
-                if paste_pos[0] >= x_end:
+                if paste_pos.x >= x_end:
                     break
 
         return {"img": bg_img, "mask": shelf_alpha_mask}
