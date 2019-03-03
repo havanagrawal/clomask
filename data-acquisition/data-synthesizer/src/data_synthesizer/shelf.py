@@ -64,23 +64,22 @@ class Shelf:
         |              |
     """
     def __init__(self, config):
-        shelves = parse_shelves_config(config["shelves"])
+        shelves = self._parse_shelves_config(config["shelves"])
         self._shelf_regions = []
         for line1, line2 in pairwise(shelves):
             self._shelf_regions.append(ShelfRegion(line1, line2))
 
+    def _parse_shelves_config(self, shelves):
+        lines = []
+        for shelfline in shelves:
+            p1 = Point(shelfline["x_start"], shelfline["y_start"])
+            p2 = Point(shelfline["x_end"], shelfline["y_end"])
+            lines.append(Line(p1, p2))
+        return lines
+
     @property
     def regions(self):
         return self._shelf_regions
-
-
-def parse_shelves_config(shelves):
-    lines = []
-    for shelfline in shelves:
-        p1 = Point(shelfline["x_start"], shelfline["y_start"])
-        p2 = Point(shelfline["x_end"], shelfline["y_end"])
-        lines.append(Line(p1, p2))
-    return lines
 
 
 def pairwise(iterable):
