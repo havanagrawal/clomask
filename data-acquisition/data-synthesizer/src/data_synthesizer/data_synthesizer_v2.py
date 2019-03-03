@@ -154,14 +154,17 @@ class DataSynthesizer:
         return {"img": bg_img, "mask": shelf_alpha_mask}
 
     def generate_synthetic_dataset(
-            self, n, categories=["bottles"], rotation_probability=0.1, max_x_offset=1,
-            obj_sizes_allowed=OBJECT_SIZES, max_objs_in_pack=3, save_dir):
+            self, n, output_dir, categories=["bottles"], rotation_probability=0.1, max_x_offset=1,
+            obj_sizes_allowed=OBJECT_SIZES, max_objs_in_pack=3):
         """Synthesize an image dataset
 
             Arguments
             ---------
             n: int
                 the number of images to be generated.
+
+            output_dir: path-like, str
+                The output directory to which the generated dataset is written.
 
             categories: list, default: ["bottles"]
                 a list of categories from which objects will be selected. Should
@@ -180,14 +183,11 @@ class DataSynthesizer:
 
             max_objs_in_pack: int, default=3
                 Maximum number of objects in a pack (appearing consecutively).
-
-            save_dir: path-like, str
-                The output directory to which the generated dataset is written.
         """
 
         timestamp = time.strftime("%Y_%m_%d_%H_%M_%S", time.gmtime())
         dataset_name = "synth_data_{}".format(timestamp)
-        save_path = os.path.join(save_dir, dataset_name)
+        save_path = os.path.join(output_dir, dataset_name)
         os.mkdir(save_path)
         with open(save_path + "/id_map.json", "w") as id_file:
             id_class_map = {v:k for k, v in self.class_map.items()}
