@@ -63,6 +63,10 @@
         "bottle_16": {
             "height": 600,
             "width": 180
+        },
+        "bottle_17": {
+            "height": 506,
+            "width": 243
         }
     },
 	"boxes": {
@@ -73,6 +77,14 @@
         "boxes_2": {
             "height": 280,
             "width": 190
+        },
+        "boxes_3": {
+          "height": 368,
+          "width": 275
+        },
+        "boxes_3": {
+          "height": 499,
+          "width": 300
         },
         "boxes_11": {
             "height": 280,
@@ -97,5 +109,5 @@
             "width": 488
         }
     }
-	
+
 }

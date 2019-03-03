@@ -98,6 +98,40 @@
         "y_start": 1003,
         "x_end": 2055,
         "y_end": 1003
+      },
+      {
+        "x_start": 1140,
+        "y_start": 1366,
+        "x_end": 2083,
+        "y_end": 1366
+      }
+    ]
+  },
+  "supermarket_shelf_0": {
+    "shelves": [
+      {
+        "x_start": 0,
+        "y_start": 113,
+        "x_end": 658,
+        "y_end": 102
+      },
+      {
+        "x_start": 0,
+        "y_start": 161,
+        "x_end": 658,
+        "y_end": 151
+      },
+      {
+        "x_start": 0,
+        "y_start": 230,
+        "x_end": 658,
+        "y_end": 230
+      },
+      {
+        "x_start": 0,
+        "y_start": 299,
+        "x_end": 658,
+        "y_end": 304
       }
     ]
   },
@@ -132,6 +166,62 @@
         "y_start": 324,
         "x_end": 400,
         "y_end": 229
+      }
+    ]
+  },
+  "supermarket_shelf_2": {
+    "shelves": [
+      {
+        "x_start": 0,
+        "y_start": 58,
+        "x_end": 630,
+        "y_end": 229
+      },
+      {
+        "x_start": 0,
+        "y_start": 205,
+        "x_end": 630,
+        "y_end": 272
+      },
+      {
+        "x_start": 0,
+        "y_start": 675,
+        "x_end": 630,
+        "y_end": 434
+      }
+    ]
+  },
+  "wooden_shelf": {
+    "shelves": [
+      {
+        "x_start": 0,
+        "y_start": 0,
+        "x_end": 640,
+        "y_end": 0
+      },
+      {
+        "x_start": 0,
+        "y_start": 181,
+        "x_end": 640,
+        "y_end": 181
+      },
+      {
+        "x_start": 0,
+        "y_start": 357,
+        "x_end": 640,
+        "y_end": 357
+      },
+      {
+        "x_start": 0,
+        "y_start": 530,
+        "x_end": 640,
+        "y_end": 530
+      },
+      {
+        "x_start": 0,
+        "y_start": 707,
+        "x_end": 640,
+        "y_end": 707
       }
     ]
   }
