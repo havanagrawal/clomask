@@ -43,26 +43,24 @@ class DataSynthesizer:
             The backgrounds directory itself must have directories named by
             categories.
 
-        data_path: path-like, str
-            The output directory to which the generated dataset is written.
-
         seed: int, default=None
             The seed used for the random number generation. This should be
             initialized in case replicable datasets are desired.
-    """
-    def __init__(self, config_path, template_path, data_path, seed=None):
 
-        self.config_path = config_path
-        self.data_path = data_path
+            NOTE: If the configuration files are modified, setting the seed will
+                  NOT generate the same dataset, i.e. configuration changes
+                  invalidate all prior seeds.
+    """
+    def __init__(self, config_path, template_path, seed=None):
         self.template_path = template_path
 
-        with open(self.config_path + "/backgrounds.json") as bg_conf_file:
+        with open(config_path + "/backgrounds.json") as bg_conf_file:
             self.bg_conf = json.load(bg_conf_file)
 
-        with open(self.config_path + "/foregrounds.json") as fg_conf_file:
+        with open(config_path + "/foregrounds.json") as fg_conf_file:
             self.fg_conf = json.load(fg_conf_file)
 
-        with open(self.config_path + "/class_map.json") as class_map_file:
+        with open(config_path + "/class_map.json") as class_map_file:
             self.class_map = json.load(class_map_file)
 
         self.bg_labels = list(self.bg_conf.keys())
@@ -156,8 +154,8 @@ class DataSynthesizer:
         return {"img": bg_img, "mask": shelf_alpha_mask}
 
     def generate_synthetic_dataset(
-            self, n, categories=["bottles"], rotation_probability=0.1, x_offset=1,
-            obj_sizes_allowed=OBJECT_SIZES, max_objs_in_pack=3):
+            self, n, categories=["bottles"], rotation_probability=0.1, max_x_offset=1,
+            obj_sizes_allowed=OBJECT_SIZES, max_objs_in_pack=3, save_dir):
         """Synthesize an image dataset
 
             Arguments
@@ -173,20 +171,23 @@ class DataSynthesizer:
                 The probability of rotating an image,
                 in other words, the proportion of rotated objects
 
-            x_offset: int, default=1
-                number of pixels present between two images.
+            max_x_offset: int, default=1
+                The maximum number of pixels present between two images.
 
             obj_sizes_allowed: list, default=OBJECT_SIZES
                 the allowed variation in sizes for the objects.
-                (s=small, m=medium and l=large)
+                Use SMALL, MEDIUM and LARGE from the ObjectSize enum
 
             max_objs_in_pack: int, default=3
                 Maximum number of objects in a pack (appearing consecutively).
+
+            save_dir: path-like, str
+                The output directory to which the generated dataset is written.
         """
 
         timestamp = time.strftime("%Y_%m_%d_%H_%M_%S", time.gmtime())
         dataset_name = "synth_data_{}".format(timestamp)
-        save_path = self.data_path + dataset_name
+        save_path = os.path.join(save_dir, dataset_name)
         os.mkdir(save_path)
         with open(save_path + "/id_map.json", "w") as id_file:
             id_class_map = {v:k for k, v in self.class_map.items()}
@@ -210,7 +211,7 @@ class DataSynthesizer:
                 "rotation_probability": rotation_probability,
                 "obj_sizes_allowed": obj_sizes_allowed,
                 "max_objs_in_pack": max_objs_in_pack,
-                "max_offset": x_offset
+                "max_offset": max_x_offset
             }
 
             shelf_masks = []
