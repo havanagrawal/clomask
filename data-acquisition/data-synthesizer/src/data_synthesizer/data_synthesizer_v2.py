@@ -12,6 +12,7 @@ from PIL import Image
 from .shelf import Shelf
 
 class ObjectSize(float, Enum):
+    """Resize factors for different object sizes"""
     SMALL = 0.6
     MEDIUM = 0.7
     LARGE = 0.8
@@ -79,11 +80,11 @@ class DataSynthesizer:
         fg_category_objs = list(self.fg_conf[fg_category].keys())
         fg_obj = self.rng.choice(fg_category_objs)
         obj_conf = self.fg_conf[fg_category][fg_obj]
-        fg_class_id = self.class_map[fg_category]
+        fg_class_id = self.class_map.get(fg_category, None)
 
         obj_file = self.template_path + "/foregrounds/{cat}/{obj}.png".format(cat=fg_category, obj=fg_obj)
 
-        return obj_file, obj_conf, fg_class_id
+        return obj_file, obj_conf, fg_category, fg_class_id
 
     def _get_bg_and_conf(self):
         bg_label = self.rng.choice(self.bg_labels)
@@ -92,11 +93,13 @@ class DataSynthesizer:
         return bg_file, bg_conf
 
     def _process_shelf_region(
-            self, shelf_region, shelf_no, bg_file, image_path, categories, rotation_probability,
+            self, shelf_region, shelf_no, bg_file, image_path, categories, nomask_categories, rotation_probability,
             obj_sizes_allowed, max_objs_in_pack, max_offset):
         """Target function for processing each individual shelf region"""
         bg_img = Image.open(bg_file)
         empty_fg = Image.new('RGBA', bg_img.size, color=(0, 0, 0, 0))
+
+        # This is the starting template for individual foreground object masks
         empty_alpha_mask = Image.new('L', bg_img.size, color=0)
 
         # Contains all the masks for this shelf region
@@ -109,10 +112,12 @@ class DataSynthesizer:
         paste_pos = PasteLocation(shelf_region.x_start, 0)
 
         while within_bounds(shelf_region, paste_pos.x):
-            fg_file, fg_conf, fg_id = self._get_fg_and_conf(categories)
+            fg_file, fg_conf, fg_category, fg_id = self._get_fg_and_conf(categories + nomask_categories)
+
             shelf_height = shelf_region.height_at(paste_pos.x)
             obj_size = self.rng.choice(obj_sizes_allowed)
             new_size = self._get_new_image_size(fg_conf, obj_size, shelf_height)
+
             fg_img = Image.open(fg_file)
             fg_img = fg_img.resize(new_size, Image.LANCZOS)
 
@@ -137,12 +142,14 @@ class DataSynthesizer:
 
                 alpha_mask = to_paste.getchannel(3)
                 new_alpha_mask = empty_alpha_mask.copy()
-                new_alpha_mask.paste(alpha_mask, paste_pos)
 
+                new_alpha_mask.paste(alpha_mask, paste_pos)
                 shelf_alpha_mask.paste(alpha_mask, paste_pos)
 
                 image_filepath = image_path + "/train_mask/mask_{}{}${}.png".format(shelf_no, num_obj, fg_id)
-                new_alpha_mask.save(image_filepath)
+
+                if fg_category not in nomask_categories:
+                    new_alpha_mask.save(image_filepath)
 
                 bg_img = Image.composite(new_fg, bg_img, new_alpha_mask)
                 x_offset = self.rng.randint(1, max_offset)
@@ -154,8 +161,8 @@ class DataSynthesizer:
         return {"img": bg_img, "mask": shelf_alpha_mask}
 
     def generate_synthetic_dataset(
-            self, n, output_dir, categories=["bottles"], rotation_probability=0.1, max_x_offset=1,
-            obj_sizes_allowed=OBJECT_SIZES, max_objs_in_pack=3):
+            self, n, output_dir, categories=None, nomask_categories=None, rotation_probability=0.1, max_x_offset=1,
+            obj_sizes_allowed=None, max_objs_in_pack=3):
         """Synthesize an image dataset
 
             Arguments
@@ -169,6 +176,11 @@ class DataSynthesizer:
             categories: list, default: ["bottles"]
                 a list of categories from which objects will be selected. Should
                 match the keys in the foreground config file.
+
+            nomask_categories: list, default: []
+                a list of categories from which objects will be selected,
+                but no masks will be generated for them. This allows us to introduce
+                controllable noise into the dataset.
 
             rotation_probability: float, default=0.1:
                 The probability of rotating an image,
@@ -184,6 +196,14 @@ class DataSynthesizer:
             max_objs_in_pack: int, default=3
                 Maximum number of objects in a pack (appearing consecutively).
         """
+        if categories is None:
+            categories = ["bottles"]
+
+        if nomask_categories is None:
+            nomask_categories = []
+
+        if obj_sizes_allowed is None:
+            obj_sizes_allowed = OBJECT_SIZES
 
         timestamp = time.strftime("%Y_%m_%d_%H_%M_%S", time.gmtime())
         dataset_name = "synth_data_{}".format(timestamp)
@@ -208,6 +228,7 @@ class DataSynthesizer:
                 "bg_file": bg_file,
                 "image_path": image_path,
                 "categories": categories,
+                "nomask_categories": nomask_categories,
                 "rotation_probability": rotation_probability,
                 "obj_sizes_allowed": obj_sizes_allowed,
                 "max_objs_in_pack": max_objs_in_pack,
