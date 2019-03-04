@@ -10,11 +10,29 @@ class Point:
         self.y = y
 
 class Line:
-    def __init__(self, start, end):
+    """Models a line w.r.t. an image with shelves
+
+    Arguments
+    ---------
+    start: Point
+        The starting (leftmost) point of the line
+
+    end: Point
+        The ending (rightmost) point of the line
+
+    is_dummy: bool, default=False
+        Whether objects can be placed directly on this line.
+
+        This allows us to restrict large objects from overlapping upper shelves
+        by creating artificial upper limits.
+    """
+    def __init__(self, start, end, is_dummy=False):
         self.start = start
         self.end = end
         self.m = (self.end.y - self.start.y) / (self.end.x - self.start.x)
         self.c = self.start.y - (self.m * self.start.x)
+
+        self.is_dummy = is_dummy
 
     def y_at(self, x):
         """The y-coordinate of the line at point x"""
@@ -55,6 +73,10 @@ class ShelfRegion:
     def y_end(self):
         return max(self.bottom_line.start.y, self.bottom_line.end.y)
 
+    @property
+    def is_dummy(self):
+        return self.bottom_line.is_dummy
+
 class Shelf:
     """A set of shelf regions, modeling the actual shelf
         ________________
@@ -74,11 +96,17 @@ class Shelf:
         for shelfline in shelves:
             p1 = Point(shelfline["x_start"], shelfline["y_start"])
             p2 = Point(shelfline["x_end"], shelfline["y_end"])
-            lines.append(Line(p1, p2))
+            is_dummy = shelfline.get("is_dummy", False)
+            lines.append(Line(p1, p2, is_dummy))
         return lines
 
     @property
     def regions(self):
+        """Return all non-dummy regions"""
+        return [region for region in self._shelf_regions if not region.is_dummy]
+
+    @property
+    def all_regions(self):
         return self._shelf_regions
 
 

@@ -191,6 +191,136 @@
       }
     ]
   },
+  "supermarket_shelf_3": {
+    "shelves": [
+      {
+        "x_start": 0,
+        "y_start": 66,
+        "x_end": 330,
+        "y_end": 102
+      },
+      {
+        "x_start": 0,
+        "y_start": 158,
+        "x_end": 330,
+        "y_end": 135
+      },
+      {
+        "x_start": 0,
+        "y_start": 300,
+        "x_end": 330,
+        "y_end": 199
+      },
+      {
+        "x_start": 0,
+        "y_start": 354,
+        "x_end": 339,
+        "y_end": 227,
+        "is_dummy": true
+      },
+      {
+        "x_start": 0,
+        "y_start": 477,
+        "x_end": 330,
+        "y_end": 282
+      },
+      {
+        "x_start": 0,
+        "y_start": 527,
+        "x_end": 340,
+        "y_end": 308,
+        "is_dummy": true
+      },
+      {
+        "x_start": 0,
+        "y_start": 643,
+        "x_end": 330,
+        "y_end": 360
+      },
+      {
+        "x_start": 35,
+        "y_start": 668,
+        "x_end": 340,
+        "y_end": 384,
+        "is_dummy": true
+      },
+      {
+        "x_start": 130,
+        "y_start": 669,
+        "x_end": 330,
+        "y_end": 437
+      }
+    ]
+  },
+  "supermarket_shelf_4": {
+    "shelves": [
+      {
+        "x_start": 0,
+        "y_start": 48,
+        "x_end": 264,
+        "y_end": 47
+      },
+      {
+        "x_start": 15,
+        "y_start": 87,
+        "x_end": 263,
+        "y_end": 169
+      },
+      {
+        "x_start": 0,
+        "y_start": 93,
+        "x_end": 263,
+        "y_end": 201,
+        "is_dummy": true
+      },
+      {
+        "x_start": 15,
+        "y_start": 157,
+        "x_end": 262,
+        "y_end": 383
+      }
+    ]
+  },
+  "supermarket_shelf_5": {
+    "shelves": [
+      {
+        "x_start": 201,
+        "y_start": 299,
+        "x_end": 605,
+        "y_end": 391
+      },
+      {
+        "x_start": 340,
+        "y_start": 374,
+        "x_end": 622,
+        "y_end": 412
+      },
+      {
+        "x_start": 335,
+        "y_start": 476,
+        "x_end": 721,
+        "y_end": 458
+      },
+      {
+        "x_start": 260,
+        "y_start": 563,
+        "x_end": 726,
+        "y_end": 479
+      },
+      {
+        "x_start": 270,
+        "y_start": 654,
+        "x_end": 729,
+        "y_end": 503
+      },
+      {
+        "x_start": 286,
+        "y_start": 773,
+        "x_end": 531,
+        "y_end": 634
+      }
+    ]
+  },
   "wooden_shelf": {
     "shelves": [
       {
@@ -222,6 +352,132 @@
         "y_start": 707,
         "x_end": 640,
         "y_end": 707
+      }
+    ]
+  },
+  "fridge_3_1": {
+    "shelves": [
+      {
+        "x_start": 119,
+        "y_start": 173,
+        "x_end": 304,
+        "y_end": 174
+      },
+      {
+        "x_start": 0,
+        "y_start": 181,
+        "x_end": 304,
+        "y_end": 181
+      },
+      {
+        "x_start": 121,
+        "y_start": 253,
+        "x_end": 293,
+        "y_end": 264
+      },
+      {
+        "x_start": 119,
+        "y_start": 364,
+        "x_end": 289,
+        "y_end": 367
+      },
+      {
+        "x_start": 121,
+        "y_start": 469,
+        "x_end": 298,
+        "y_end": 467
+      },
+      {
+        "x_start": 121,
+        "y_start": 583,
+        "x_end": 305,
+        "y_end": 576
+      },
+      {
+        "x_start": 122,
+        "y_start": 701,
+        "x_end": 299,
+        "y_end": 682
+      }
+    ]
+  },
+  "fridge_3_2": {
+    "shelves": [
+      {
+        "x_start": 362,
+        "y_start": 177,
+        "x_end": 521,
+        "y_end": 191
+      },
+      {
+        "x_start": 365,
+        "y_start": 246,
+        "x_end": 517,
+        "y_end": 251
+      },
+      {
+        "x_start": 364,
+        "y_start": 364,
+        "x_end": 500,
+        "y_end": 366
+      },
+      {
+        "x_start": 363,
+        "y_start": 464,
+        "x_end": 504,
+        "y_end": 461
+      },
+      {
+        "x_start": 366,
+        "y_start": 577,
+        "x_end": 515,
+        "y_end": 568
+      },
+      {
+        "x_start": 367,
+        "y_start": 686,
+        "x_end": 518,
+        "y_end": 668
+      }
+    ]
+  },
+  "fridge_3_3": {
+    "shelves": [
+      {
+        "x_start": 583,
+        "y_start": 193,
+        "x_end": 699,
+        "y_end": 201
+      },
+      {
+        "x_start": 585,
+        "y_start": 257,
+        "x_end": 693,
+        "y_end": 260
+      },
+      {
+        "x_start": 583,
+        "y_start": 364,
+        "x_end": 672,
+        "y_end": 366
+      },
+      {
+        "x_start": 586,
+        "y_start": 461,
+        "x_end": 678,
+        "y_end": 462
+      },
+      {
+        "x_start": 585,
+        "y_start": 564,
+        "x_end": 657,
+        "y_end": 560
+      },
+      {
+        "x_start": 584,
+        "y_start": 665,
+        "x_end": 658,
+        "y_end": 658
       }
     ]
   }
