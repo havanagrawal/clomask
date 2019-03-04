@@ -403,5 +403,6 @@ class ParallelDataSynthesizer(DataSynthesizer):
                     shutil.move(filepath, save_path)
                 except Exception as e:
                     print("Encountered error {}. Continuing.".format(e))
+            shutil.rmtree(path)
 
         return save_path
