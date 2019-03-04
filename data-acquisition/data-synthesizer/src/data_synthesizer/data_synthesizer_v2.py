@@ -5,6 +5,8 @@ import json
 import time
 from enum import Enum
 from collections import namedtuple
+from multiprocessing import cpu_count
+from multiprocessing.dummy import Pool
 
 import numpy as np
 from PIL import Image
@@ -53,6 +55,7 @@ class DataSynthesizer:
                   invalidate all prior seeds.
     """
     def __init__(self, config_path, template_path, seed=None):
+        self.config_path = config_path
         self.template_path = template_path
 
         with open(config_path + "/backgrounds.json") as bg_conf_file:
@@ -162,7 +165,7 @@ class DataSynthesizer:
 
     def generate_synthetic_dataset(
             self, n, output_dir, categories=None, nomask_categories=None, rotation_probability=0.1, max_x_offset=1,
-            obj_sizes_allowed=None, max_objs_in_pack=3):
+            obj_sizes_allowed=None, max_objs_in_pack=3, verbose=True):
         """Synthesize an image dataset
 
             Arguments
@@ -195,6 +198,14 @@ class DataSynthesizer:
 
             max_objs_in_pack: int, default=3
                 Maximum number of objects in a pack (appearing consecutively).
+
+            verbose: bool, default: False
+                If true, print a message each time an image is generated.
+
+        Return
+        ------
+        save_path: path-like, str
+            The directory to which all the generated data was written.
         """
         if categories is None:
             categories = ["bottles"]
@@ -220,7 +231,7 @@ class DataSynthesizer:
             os.mkdir(image_path + "/train_image")
             os.mkdir(image_path + "/train_mask")
 
-            print("Generating image {i} of {n}".format(i=i+1, n=n))
+            verbose and print("Generating image {i} of {n}".format(i=i+1, n=n))
             bg_file, bg_conf = self._get_bg_and_conf()
             shelf = Shelf(config=bg_conf)
 
@@ -252,3 +263,114 @@ class DataSynthesizer:
 
         print("Done.")
         return save_path
+
+
+class ParallelDataSynthesizer(DataSynthesizer):
+    """Parallelized Synthetic Dataset creator for Mask RCNN
+
+        Arguments
+        ---------
+        config_path: path-like, str
+            The relative/absolute path to the configuration directory
+            It is expected to contain three files:
+                - backgrounds.json
+                - foregrounds.json
+                - class_map.json
+
+        template_path: path-like, str
+            The relative/absolute path to the template image directory
+            It is expected to have the following directories
+                - foregrounds
+                - backgrounds
+            The backgrounds directory itself must have directories named by
+            categories.
+
+        seed: int, default=None
+            The seed used for the random number generation. This should be
+            initialized in case replicable datasets are desired.
+
+            NOTE: If the configuration files are modified, setting the seed will
+                  NOT generate the same dataset, i.e. configuration changes
+                  invalidate all prior seeds.
+
+        n_jobs: int, default: # of cpus
+            The number of threads to use
+    """
+    def __init__(self, config_path, template_path, seed=None, n_jobs=None):
+        super(ParallelDataSynthesizer, self).__init__(config_path, template_path, seed)
+        self.seed = seed
+        self.n_jobs = n_jobs or cpu_count()
+
+    def generate_synthetic_dataset(
+            self, n, output_dir, categories=None, nomask_categories=None, rotation_probability=0.1, max_x_offset=1,
+            obj_sizes_allowed=None, max_objs_in_pack=3, verbose=True):
+        """Synthesize an image dataset
+
+            Arguments
+            ---------
+            n: int
+                the number of images to be generated.
+
+            output_dir: path-like, str
+                The output directory to which the generated dataset is written.
+
+            categories: list, default: ["bottles"]
+                a list of categories from which objects will be selected. Should
+                match the keys in the foreground config file.
+
+            nomask_categories: list, default: []
+                a list of categories from which objects will be selected,
+                but no masks will be generated for them. This allows us to introduce
+                controllable noise into the dataset.
+
+            rotation_probability: float, default=0.1:
+                The probability of rotating an image,
+                in other words, the proportion of rotated objects
+
+            max_x_offset: int, default=1
+                The maximum number of pixels present between two images.
+
+            obj_sizes_allowed: list, default=OBJECT_SIZES
+                the allowed variation in sizes for the objects.
+                Use SMALL, MEDIUM and LARGE from the ObjectSize enum
+
+            max_objs_in_pack: int, default=3
+                Maximum number of objects in a pack (appearing consecutively).
+
+            verbose: bool, default: False
+                If true, print a message each time an image is generated.
+
+        Return
+        ------
+        results: list[pool.AsyncResult]
+            A list of AsyncResult, where each result contains the output directory
+            to which the data was written.
+
+            Note: Consider using the staticmethod "merge_results" that
+            creates a single usable dataset
+        """
+        rng = np.random.RandomState(self.seed)
+        seeds = rng.choice(10*n, size=self.n_jobs, replace=False)
+        pool = Pool(self.n_jobs)
+        results = []
+        n = n // self.n_jobs
+        for seed in seeds:
+            synth = DataSynthesizer(self.config_path, self.template_path, seed=seed)
+            res = pool.apply_async(
+                synth.generate_synthetic_dataset,
+                args=(
+                    n, output_dir, categories, nomask_categories,
+                    rotation_probability, max_x_offset,
+                    obj_sizes_allowed, max_objs_in_pack, verbose
+                )
+            )
+            results.append(res)
+
+            # Ugly hack: Prevent the same timestamp being used for the directory name
+            time.sleep(1)
+
+        return results
+
+    @staticmethod
+    def merge(save_paths):
+        raise NotImplementedError

@@ -185,6 +185,13 @@
       },
       {
         "x_start": 0,
+        "y_start": 277,
+        "x_end": 630,
+        "y_end": 307,
+        "is_dummy": true
+      },
+      {
+        "x_start": 0,
         "y_start": 675,
         "x_end": 630,
         "y_end": 434
@@ -318,6 +325,74 @@
         "y_start": 773,
         "x_end": 531,
         "y_end": 634
+      }
+    ]
+  },
+  "supermarket_shelf_6": {
+    "shelves": [
+      {
+        "x_start": 279,
+        "y_start": 29,
+        "x_end": 471,
+        "y_end": 38
+      },
+      {
+        "x_start": 279,
+        "y_start": 83,
+        "x_end": 512,
+        "y_end": 74
+      },
+      {
+        "x_start": 280,
+        "y_start": 94,
+        "x_end": 536,
+        "y_end": 84,
+        "is_dummy": true
+      },
+      {
+        "x_start": 281,
+        "y_start": 147,
+        "x_end": 501,
+        "y_end": 115
+      },
+      {
+        "x_start": 278,
+        "y_start": 169,
+        "x_end": 532,
+        "y_end": 124,
+        "is_dummy": true
+      },
+      {
+        "x_start": 277,
+        "y_start": 207,
+        "x_end": 501,
+        "y_end": 156
+      },
+      {
+        "x_start": 275,
+        "y_start": 240,
+        "x_end": 493,
+        "y_end": 167,
+        "is_dummy": true
+      },
+      {
+        "x_start": 275,
+        "y_start": 278,
+        "x_end": 496,
+        "y_end": 191
+      },
+      {
+        "x_start": 275,
+        "y_start": 307,
+        "x_end": 490,
+        "y_end": 205,
+        "is_dummy": true
+      },
+      {
+        "x_start": 275,
+        "y_start": 330,
+        "x_end": 491,
+        "y_end": 232
       }
     ]
   },
