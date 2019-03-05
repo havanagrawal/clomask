@@ -1,5 +1,15 @@
 # Data Synthesis
 
+## Table of Contents
+
+1. [Introduction](#introduction)
+1. [Examples](#examples)
+1. [Usage](#usage)
+  1. [Configuration](#configuration)
+    1. [Image Templates](#image-templates)
+    1. [Coordinate Configuration](#coordinate-configuration)
+  1. [Code](#code)
+
 ## Introduction
 
 Deep learning models such as CNNs require a significant amount of data, on the order of hundreds or even thousands of examples per class. In the scope of this project, we had two particular challenges:
@@ -28,13 +38,26 @@ In order to achieve this, we need two types of images,
   1. `backgrounds` which model objects such as shelves, fridges, table tops, etc.,
   2. `foregrounds` which model objects that are to be placed on the `background` objects, such as bottles, cans, bags of chips, candy bags, etc.
 
-The [image templates](./img_templates) directory contains these images.
+The [image templates](./img_templates) directory contains these images. Note that the foreground images MUST be in PNG format to support overlaying them on the background in a meaningful manner.
 
 #### Coordinate Configuration
 
 The synthesizer is currently rule-based, and has no "vision" capabilities. We need to specify the coordinates in the background image (in terms of pixels), that the foreground images can be placed on. The synthesizer models shelves as line equations, and thus one needs to specify the coordinates of each shelf, in the form of bounded regions.
 
-<details><summary>A sample entry in the `backgrounds.json` file:</summary>
+The configuration files should be stored in a `config` directory, and have the following structure:
+```
+config
+├── backgrounds.json
+├── class_map.json
+└── foregrounds.json
+```
+
+We will talk about each of these files below:
+
+##### [`backgrounds.json`](./config/backgrounds.json)
+
+A sample entry in the `backgrounds.json` file:
+<details><summary>Expand:</summary>
 
 <p>
 
@@ -74,6 +97,47 @@ The synthesizer is currently rule-based, and has no "vision" capabilities. We ne
 
 </p>
 </details>
+
+Most of the configuration is self-explanatory:
+
+1. The key should be the same name as the image in the `img_templates/backgrounds` directory
+1. The order of the line coordinates matters. Each shelf region is constructed by a pair of consecutive lines.
+1. The `is_dummy` field allows us to account for shelves that have significant width (especially in images with an angled PoV), and restrict the items from overlapping upper shelves. If the `is_dummy` field is true, it accounts for a line equation, but will not allow items to be placed on it.
+
+##### [`foregrounds.json`](./config/foregrounds.json)
+
+This is a simpler configuration, where the `height` and `width` of each foreground object is stored. A sample entry looks like the following:
+
+```json
+{
+  "bottles": {
+    "bottle_01": {
+        "width": 188,
+        "height": 500
+    },
+    "bottle_02": {
+        "width": 124,
+        "height": 438
+    }
+  }
+}
+```
+
+1. The key should be the same name as the image in the `img_templates/foregrounds` directory
+
+##### [`class_map.json`](./config/class_map.json)
+
+The class map is used purely for naming files. This is necessary because once the mask PNG file is generated, we need a way to identify which class it originally was. A sample file:
+
+```json
+{
+	"bottles": 1,
+	"boxes": 2,
+	"bags": 3
+}
+```
+
+Note: In retrospect, we could simply include the label in the file itself, instead of creating `id_map.json` which is the inverted version of `class_map.json`.
 
 ### Code
 
