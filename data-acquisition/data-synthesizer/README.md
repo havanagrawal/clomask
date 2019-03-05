@@ -2,13 +2,13 @@
 
 ## Table of Contents
 
-1. [Introduction](#introduction)
-1. [Examples](#examples)
-1. [Usage](#usage)
-  1. [Configuration](#configuration)
-    1. [Image Templates](#image-templates)
-    1. [Coordinate Configuration](#coordinate-configuration)
-  1. [Code](#code)
+1. [Introduction](#introduction)  
+1. [Examples](#examples)  
+1. [Usage](#usage)  
+  1. [Configuration](#configuration)  
+    1. [Image Templates](#image-templates)  
+    1. [Coordinate Configuration](#coordinate-configuration)  
+  1. [Code](#code)  
 
 ## Introduction
 
