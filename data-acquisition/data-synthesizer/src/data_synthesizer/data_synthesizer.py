@@ -125,7 +125,9 @@ class DataSynthesizer:
             fg_img = Image.open(fg_file)
             fg_img = fg_img.resize(new_size, Image.LANCZOS)
 
-            for _ in range(max_objs_in_pack):
+            objs_in_pack = self.rng.randint(1, max_objs_in_pack + 1)
+
+            for _ in range(objs_in_pack):
                 num_obj += 1
                 to_paste = fg_img
 
@@ -150,7 +152,8 @@ class DataSynthesizer:
                 new_alpha_mask.paste(alpha_mask, paste_pos)
                 shelf_alpha_mask.paste(alpha_mask, paste_pos)
 
-                image_filepath = image_path + "/train_mask/mask_{}{}${}.png".format(shelf_no, num_obj, fg_id)
+                obj_num_str = str(num_obj).rjust(3, "0")
+                image_filepath = image_path + "/train_mask/mask_{}_{}${}.png".format(shelf_no, obj_num_str, fg_id)
 
                 if fg_category not in nomask_categories:
                     new_alpha_mask.save(image_filepath)
@@ -166,7 +169,7 @@ class DataSynthesizer:
 
     def generate_synthetic_dataset(
             self, n, output_dir, categories=None, nomask_categories=None, rotation_probability=0.1, max_x_offset=1,
-            obj_sizes_allowed=None, max_objs_in_pack=3, verbose=True):
+            obj_sizes_allowed=None, max_objs_in_pack=3, skip_shelf_probability=0, verbose=True):
         """Synthesize an image dataset
 
             Arguments
@@ -198,9 +201,12 @@ class DataSynthesizer:
                 Use SMALL, MEDIUM and LARGE from the ObjectSize enum
 
             max_objs_in_pack: int, default=3
-                Maximum number of objects in a pack (appearing consecutively).
+                Maximum number of objects in a pack (appearing consecutively)
 
-            verbose: bool, default: False
+            skip_shelf_probability: float, [0, 1], default=0
+                The probability of skipping a shelf while placing items
+
+            verbose: bool, default=False
                 If true, print a message each time an image is generated.
 
         Return
@@ -248,8 +254,13 @@ class DataSynthesizer:
 
             shelf_masks = []
             for k, shelf_region in enumerate(shelf.regions):
+                skip_shelf = self.rng.binomial(1, p=skip_shelf_probability)
+                # Never skip the first shelf
+                if k != 0 and skip_shelf:
+                    continue
                 shelf_n_mask = self._process_shelf_region(shelf_region, k, **args)
                 shelf_masks.append(shelf_n_mask)
+
 
             bg_img = None
             for shelf_n_mask in shelf_masks:
@@ -259,6 +270,7 @@ class DataSynthesizer:
                     bg_img = shelf_img.copy()
                 else:
                     bg_img = Image.composite(shelf_img, bg_img, shelf_mask)
+
             bg_img.save(image_path + "/train_image/{}.png".format(image_name))
 
         print("Done.")
@@ -303,7 +315,7 @@ class ParallelDataSynthesizer(DataSynthesizer):
 
     def generate_synthetic_dataset(
             self, n, output_dir, categories=None, nomask_categories=None, rotation_probability=0.1, max_x_offset=1,
-            obj_sizes_allowed=None, max_objs_in_pack=3, verbose=True):
+            obj_sizes_allowed=None, max_objs_in_pack=3, skip_shelf_probability=0, verbose=True):
         """Synthesize an image dataset
 
             Arguments
@@ -335,7 +347,10 @@ class ParallelDataSynthesizer(DataSynthesizer):
                 Use SMALL, MEDIUM and LARGE from the ObjectSize enum
 
             max_objs_in_pack: int, default=3
-                Maximum number of objects in a pack (appearing consecutively).
+                Maximum number of objects in a pack (appearing consecutively)
+
+            skip_shelf_probability: float, [0, 1], default=0
+                The probability of skipping a shelf while placing items
 
             verbose: bool, default: False
                 If true, print a message each time an image is generated.
@@ -360,8 +375,8 @@ class ParallelDataSynthesizer(DataSynthesizer):
                 synth.generate_synthetic_dataset,
                 args=(
                     n, output_dir, categories, nomask_categories,
-                    rotation_probability, max_x_offset,
-                    obj_sizes_allowed, max_objs_in_pack, verbose
+                    rotation_probability, max_x_offset, obj_sizes_allowed,
+                    max_objs_in_pack, skip_shelf_probability, verbose
                 )
             )
             results.append(res)

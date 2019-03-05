@@ -396,6 +396,48 @@
       }
     ]
   },
+  "supermarket_shelf_7": {
+    "shelves": [
+      {
+        "x_start": 0,
+        "y_start": 16,
+        "x_end": 722,
+        "y_end": 16
+      },
+      {
+        "x_start": 0,
+        "y_start": 103,
+        "x_end": 722,
+        "y_end": 103
+      },
+      {
+        "x_start": 0,
+        "y_start": 129,
+        "x_end": 722,
+        "y_end": 129,
+        "is_dummy": true
+      },
+      {
+        "x_start": 0,
+        "y_start": 221,
+        "x_end": 722,
+        "y_end": 221
+      },
+      {
+        "x_start": 0,
+        "y_start": 259,
+        "x_end": 722,
+        "y_end": 259,
+        "is_dummy": true
+      },
+      {
+        "x_start": 0,
+        "y_start": 404,
+        "x_end": 722,
+        "y_end": 404
+      }
+    ]
+  },
   "wooden_shelf": {
     "shelves": [
       {
@@ -437,12 +479,6 @@
         "y_start": 173,
         "x_end": 304,
         "y_end": 174
-      },
-      {
-        "x_start": 0,
-        "y_start": 181,
-        "x_end": 304,
-        "y_end": 181
       },
       {
         "x_start": 121,
