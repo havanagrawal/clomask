@@ -1,23 +1,44 @@
 {
     "large_shelf_stock": {
         "shelf_y_positions": [
-            816,
-            1176,
-            1536,
-            1900,
-            2256
+            207,
+            298,
+            391,
+            483,
+            573
         ],
         "shelf_region": [
             [
-                500,
-                500
+                133,
+                133
             ],
             [
-                3900,
-                2556
+                1000,
+                572
             ]
         ],
         "num_shelves": 5,
-        "shelf_ht": 310
+        "shelf_ht": 80
+    },
+	"small_shelf_stock": {
+        "shelf_region": [
+            [
+                96,
+                11
+            ],
+            [
+                695,
+                887
+            ]
+        ],
+        "shelf_ht": 165,
+        "num_shelves": 5,
+        "shelf_y_positions": [
+            157,
+            341,
+            525,
+            710,
+            887
+        ]
     }
 }
