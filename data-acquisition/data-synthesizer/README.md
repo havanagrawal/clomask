@@ -137,8 +137,58 @@ The class map is used purely for naming files. This is necessary because once th
 }
 ```
 
-Note: In retrospect, we could simply include the label in the file itself, instead of creating `id_map.json` which is the inverted version of `class_map.json`.
+This file is needed to keep the class number for each class constant. Consider the use case where a model has been (pre-)trained on bottles in one pass, and needs to be trained on boxes and bags in the next iteration. We still need to retain the fact that the original weights have been learned with "bottles" as 1.
 
 ### Code
 
-The module exports the `DataSynthesizer` class
+The module exports the [`DataSynthesizer`](./src/data_synthesizer/data_synthesizer.py#L30) and [`ParallelDataSynthesizer`](./src/data_synthesizer/data_synthesizer.py#L280) classes. These are heavily documented, and their usage can be seen in [the demo notebook](./Synthetic-Data-Creation-for-Retail-Environments.ipynb). Usually, one would follow a simple pattern for generating datasets:
+
+1. With the `DataSynthesizer` class:  
+```python
+from src.data_synthesizer import DataSynthesizer
+
+config_path = 'config/'
+template_path = "img_templates/"
+output_dir = "data/"
+
+synthesizer = DataSynthesizer(config_path, template_path)
+
+# Generate 10 data points
+save_path = synthesizer.generate_synthetic_dataset(
+    n = 10,
+    output_dir = output_dir,
+    categories = ["bottles", "bags", "boxes"],
+    nomask_categories = ["cans"],
+    rotation_probability = 0,
+    max_objs_in_pack = 2,
+    max_x_offset = 10,
+    skip_shelf_probability = 0.05,
+    verbose = True
+)
+```  
+2. With the `ParallelDataSynthesizer` class:  
+```python
+from src.data_synthesizer import DataSynthesizer
+
+config_path = 'config/'
+template_path = "img_templates/"
+output_dir = "data/"
+
+synthesizer = ParallelDataSynthesizer(config_path, template_path, n_jobs=10)
+
+# Generate 100 data points
+results = synthesizer.generate_synthetic_dataset(
+    n = 100,
+    output_dir = output_dir,
+    categories = ["bottles", "bags", "boxes"],
+    nomask_categories = ["cans"],
+    rotation_probability = 0,
+    max_objs_in_pack = 2,
+    max_x_offset = 10,
+    skip_shelf_probability = 0.05,
+    verbose = True
+)
+
+# Resolve the async results, merge the datasets and get a single dataset
+save_path = ParallelDataSynthesizer.merge(results, output_dir=output_dir)
+```  
