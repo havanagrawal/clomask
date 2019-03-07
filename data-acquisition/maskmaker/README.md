@@ -1,5 +1,11 @@
 # MaskMaker
 
+## Table of Contents
+
+1. [Introduction](#introduction)  
+2. [Directory Structure](directory-structure)  
+3. [Usage](#usage)  
+
 ## Introduction
 
 Using the polygon tool on LabelMe, one can generate polygons for various objects in an image. These polygons can subsequently be downloaded in an XML format. This module is a thin wrapper for parsing the XML into mask files.
