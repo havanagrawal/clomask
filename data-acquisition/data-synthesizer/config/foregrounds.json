@@ -1,101 +1,174 @@
 {
-    "bottles": {
-        "bottle_1": {
-            "width": 188,
-            "height": 500
-        },
-        "bottle_3": {
-            "width": 86,
-            "height": 272
-        },
-        "bottle_2": {
-            "width": 124,
-            "height": 438
-        },
-        "bottle_4": {
-            "height": 355,
-            "width": 132
-        },
-        "bottle_5": {
-            "height": 388,
-            "width": 118
-        },
-        "bottle_6": {
-            "height": 450,
-            "width": 150
-        },
-        "bottle_7": {
-            "height": 478,
-            "width": 172
-        },
-        "bottle_8": {
-            "height": 650,
-            "width": 240
-        },
-        "bottle_9": {
-            "height": 488,
-            "width": 185
-        },
-        "bottle_10": {
-            "height": 645,
-            "width": 220
-        },
-        "bottle_11": {
-            "height": 800,
-            "width": 230
-        },
-        "bottle_12": {
-            "height": 1140,
-            "width": 400
-        },
-        "bottle_13": {
-            "height": 447,
-            "width": 146
-        },
-        "bottle_14": {
-            "height": 500,
-            "width": 130
-        },
-        "bottle_15": {
-            "height": 370,
-            "width": 95
-        },
-        "bottle_16": {
-            "height": 600,
-            "width": 180
-        }
+  "bottles": {
+    "bottle_01": {
+      "width": 188,
+      "height": 500
     },
-	"boxes": {
-        "boxes_1": {
-            "height": 280,
-            "width": 198
-        },
-        "boxes_2": {
-            "height": 280,
-            "width": 190
-        },
-        "boxes_11": {
-            "height": 280,
-            "width": 195
-        }
+    "bottle_02": {
+      "width": 124,
+      "height": 438
     },
-    "bags": {
-        "bag1": {
-            "height": 256,
-            "width": 190
-        },
-        "bag2": {
-            "height": 395,
-            "width": 370
-        },
-        "bag3": {
-            "height": 355,
-            "width": 260
-        },
-        "bag4": {
-            "height": 418,
-            "width": 488
-        }
+    "bottle_03": {
+      "width": 86,
+      "height": 272
+    },
+    "bottle_04": {
+      "height": 355,
+      "width": 132
+    },
+    "bottle_05": {
+      "height": 388,
+      "width": 118
+    },
+    "bottle_06": {
+      "height": 450,
+      "width": 150
+    },
+    "bottle_07": {
+      "height": 478,
+      "width": 172
+    },
+    "bottle_08": {
+      "height": 650,
+      "width": 240
+    },
+    "bottle_09": {
+      "height": 488,
+      "width": 185
+    },
+    "bottle_10": {
+      "height": 645,
+      "width": 220
+    },
+    "bottle_11": {
+      "height": 800,
+      "width": 230
+    },
+    "bottle_12": {
+      "height": 1140,
+      "width": 400
+    },
+    "bottle_13": {
+      "height": 447,
+      "width": 146
+    },
+    "bottle_14": {
+      "height": 500,
+      "width": 130
+    },
+    "bottle_15": {
+      "height": 370,
+      "width": 95
+    },
+    "bottle_16": {
+      "height": 600,
+      "width": 180
+    },
+    "bottle_17": {
+      "height": 506,
+      "width": 243
     }
-	
+  },
+  "boxes": {
+    "boxes_1": {
+      "height": 280,
+      "width": 198
+    },
+    "boxes_2": {
+      "height": 280,
+      "width": 190
+    },
+    "boxes_4": {
+      "height": 499,
+      "width": 300
+    },
+    "boxes_11": {
+      "height": 280,
+      "width": 195
+    }
+  },
+  "bags": {
+    "bag_01": {
+      "height": 256,
+      "width": 190
+    },
+    "bag_02": {
+      "height": 395,
+      "width": 370
+    },
+    "bag_03": {
+      "height": 355,
+      "width": 260
+    },
+    "bag_04": {
+      "height": 418,
+      "width": 488
+    },
+    "bag_05": {
+      "height": 410,
+      "width": 291
+    },
+    "bag_06": {
+      "height": 408,
+      "width": 293
+    },
+    "bag_07": {
+      "height": 418,
+      "width": 285
+    },
+    "bag_08": {
+      "height": 470,
+      "width": 327
+    },
+    "bag_09": {
+      "height": 461,
+      "width": 330
+    },
+    "bag_10": {
+      "height": 455,
+      "width": 326
+    },
+    "bag_11": {
+      "height": 308,
+      "width": 243
+    },
+    "bag_12": {
+      "height": 293,
+      "width": 200
+    },
+    "bag_13": {
+      "height": 483,
+      "width": 334
+    },
+    "bag_14": {
+      "height": 383,
+      "width": 270
+    },
+    "bag_15": {
+      "height": 552,
+      "width": 385
+    },
+    "bag_16": {
+      "height": 495,
+      "width": 422
+    },
+    "bag_17": {
+      "height": 462,
+      "width": 302
+    },
+    "bag_18": {
+      "height": 454,
+      "width": 393
+    }
+  },
+  "cans": {
+    "can_0": {
+      "height": 614,
+      "width": 345
+    },
+    "can_1": {
+      "height": 562,
+      "width": 297
+    }
+  }
 }
