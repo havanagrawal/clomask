@@ -64,12 +64,12 @@ python3 model_server.py
 #### Web Server
 
 1. [Optional] SCP the web app to an EC2 instance and cd into it  
-1. Start the server:
+2. Start the server:
 ```bash
 cd webapp
 python3 -m http.server 8043
 ```  
-1. Open up the web app to the internet:
+3. Open up the web app to the internet:
 ```bash
 ./ngrok http 8043
 ```
