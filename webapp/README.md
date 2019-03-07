@@ -50,27 +50,27 @@ The web app provides a way to showcase the Mask RCNN model wrapped up in a web U
 #### Model Server
 
 1. Update the [config.py](./model_server/config.py) file with the above infrastructure details.
-1. SCP the `model_server` directory to the EC2 instance.
+1. SCP the [`model_server`](./model_server) directory to the EC2 instance.
 1. SSH to the EC2 instance, and cd into the `model_server` directory.
-1. Run the `install_mrcnn.sh` script.
+1. Run the [`install_mrcnn.sh`](./model_server/install_mrcnn.sh) script.
 1. Install requirements:
     1. `pip3 install -r Mask_RCNN/requirements.txt`
     1. `pip3 install -r requirements.txt`
 1. Start the model:
-```
+```bash
 python3 model_server.py
 ```
 
 #### Web Server
 
-1. [Optional] SCP the web app to an EC2 instance and cd into it
+1. [Optional] SCP the web app to an EC2 instance and cd into it  
 1. Start the server:
-```
+```bash
 cd webapp
 python3 -m http.server 8043
-```
+```  
 1. Open up the web app to the internet:
-```
+```bash
 ./ngrok http 8043
 ```
 
