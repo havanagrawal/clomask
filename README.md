@@ -2,16 +2,30 @@
 
 ## Table of Contents
 
+1. [Directory Structure](#directory-structure)
+1. [Contributors](#contributors)
+1. [References](#references)
+
 ## Directory Structure
 
 ```
 .
-├── data
 ├── data-acquisition
-├── docs
 ├── research
 └── webapp
 ```
+
+### Data Acquisition
+
+A major challenge was to acquire enough data without spending too much time/effort in manual labeling. The data acquisition module attempts to achieve the generation of large-scale, reproducible image/mask datasets with a high degree of variance.
+
+### Research
+
+The COCO dataset only has `bottle` (out of the other retail products we needed to segment, such as `bag` and `box`), and thus we needed to retrain the model on newer data. This section covers our experiments, learnings and results from the training and validation process.
+
+### Web App
+
+The web app simply deploys and serves our final model in an end-to-end fashion where a user can upload an image and get the view the annotated image as the result.
 
 ## Contributors
 
@@ -21,14 +35,13 @@
  * [Toan Luong](https://github.com/lmtoan)
  * [Vishnu Nandakumar](https://github.com/vivanvish)
 
-## License
-
 ## References
 
 ### Literature
+
 1. [Fast R-CNN -  Ross Girshick](https://arxiv.org/abs/1504.08083)
-2. [Faster R-CNN: Towards Real-Time Object Detection with Region Proposal Networks - Shaoqing Ren, Kaiming He, Ross Girshick, Jian Sun](https://arxiv.org/abs/1506.01497)
-3. [Mask R-CNN - Kaiming He, Georgia Gkioxari, Piotr Dollár, Ross Girshick](https://arxiv.org/abs/1703.06870)
+1. [Faster R-CNN: Towards Real-Time Object Detection with Region Proposal Networks - Shaoqing Ren, Kaiming He, Ross Girshick, Jian Sun](https://arxiv.org/abs/1506.01497)
+1. [Mask R-CNN - Kaiming He, Georgia Gkioxari, Piotr Dollár, Ross Girshick](https://arxiv.org/abs/1703.06870)
 
 ### Implementations
 
