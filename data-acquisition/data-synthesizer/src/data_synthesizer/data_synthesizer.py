@@ -226,7 +226,7 @@ class DataSynthesizer:
         timestamp = time.strftime("%Y_%m_%d_%H_%M_%S", time.gmtime())
         dataset_name = "synth_data_{}".format(timestamp)
         save_path = os.path.join(output_dir, dataset_name)
-        os.mkdir(save_path)
+        os.makedirs(save_path)
         with open(save_path + "/id_map.json", "w") as id_file:
             id_class_map = {v:k for k, v in self.class_map.items()}
             json.dump(id_class_map, id_file, indent=4)
