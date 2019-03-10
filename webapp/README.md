@@ -42,7 +42,7 @@ The web app provides a way to showcase the Mask RCNN model wrapped up in a web U
 
 1. S3 Bucket named `clomask-input`, the location to which user-uploaded images will be uploaded.
 1. S3 Bucket named `clomask-output`, the location to which annotated images will be written.
-1. SQS Queue named `clomaskInput`, the trigger queue from where the model server is loaded.
+1. SQS Queue named `clomaskInput`, the trigger queue from where the model server picks up items to process.
 1. EC2 instance, the instance actually running the model. If this is equipped with a GPU, one can expect sub-second inference. A regular micro/small instance responds within a few seconds.
 
 ### Deployment
