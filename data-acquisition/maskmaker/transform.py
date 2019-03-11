@@ -89,10 +89,10 @@ def main(args):
 
         # Save mask files to appropriate location
         if not imask.polygons:
-            for mask_file in get_masks_for(mask_path, img_id):
-                sh.copy(mask_file, dirs["mask_dir"])
-        else:
-            imask.save_masks(dirs["mask_dir"])
+            logging.error("Old format of masks is unsupported. Please use the polygon tool to make masks for %s", image_file)
+            continue
+
+        imask.save_masks(dirs["mask_dir"])
 
         # Move image files to the desired location
         sh.copy(image_filepath, dirs["image_dir"])
