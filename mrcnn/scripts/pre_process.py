@@ -26,15 +26,15 @@ def mask_to_h5(train_path):
         mask = []
         label_array = []
         for mask_file in next(os.walk(path + MASK_PATH))[2]:
-            if 'png' in mask_file:
-                    class_id = int(mask_file.split('$')[1][:-4])
-                    label_array.append(class_id)
+            if 'png' in mask_file.lower():
                     mask_ = cv2.imread(path + MASK_PATH + mask_file, 0)
                     i += 1
                     mask_ = np.where(mask_ > 128, 1, 0)
                     # Add mask only if its area is larger than one pixel
                     if np.sum(mask_) >= 1:
                         mask.append(np.squeeze(mask_))
+                        class_id = int(mask_file.split('$')[1][:-4])
+                        label_array.append(class_id)
         mask = np.stack(mask, axis=-1)
         mask = mask.astype(np.uint8)
         fname = path + MASK_PATH + id_ + '.h5'
@@ -49,5 +49,5 @@ def mask_to_h5(train_path):
 
 if __name__ == '__main__':
     start = time.time()
-    mask_to_h5(train_path)
+    mask_to_h5(TEST_PATH)
     print('Elapsed time', round((time.time() - start)/60, 1), 'minutes')

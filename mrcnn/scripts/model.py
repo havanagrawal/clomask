@@ -1273,6 +1273,7 @@ def load_image_gt(dataset, config, image_id, augment=False, augmentation=None,
 
     # Note that some boxes might be all zeros if the corresponding mask got cropped out.
     # and here is to filter them out
+    
     _idx = np.sum(mask, axis=(0, 1)) > 0
     mask = mask[:, :, _idx]
     class_ids = class_ids[_idx]
@@ -2303,6 +2304,8 @@ class MaskRCNN():
               3+: Train Resnet stage 3 and up
               4+: Train Resnet stage 4 and up
               5+: Train Resnet stage 5 and up
+              mrcnn_mask: Just mask layers
+              mask_heads: Mask layers or rpn/fpn
         augmentation: Optional. An imgaug (https://github.com/aleju/imgaug)
             augmentation. For example, passing imgaug.augmenters.Fliplr(0.5)
             flips images right/left 50% of the time. You can pass complex
@@ -2332,6 +2335,9 @@ class MaskRCNN():
             "5+": r"(res5.*)|(bn5.*)|(mrcnn\_.*)|(rpn\_.*)|(fpn\_.*)",
             # All layers
             "all": ".*",
+            # Just Mask layers
+            "mrcnn_mask": r"(mrcnn\_mask.*)",
+            "mask_heads": r"(mrcnn\_mask.*)|(rpn\_.*)|(fpn\_.*)",
         }
         if layers in layer_regex.keys():
             layers = layer_regex[layers]

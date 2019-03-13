@@ -253,7 +253,6 @@ class ClomaskConfig(Config):
 
     # Give the configuration a recognizable name
     NAME = "clomask"
-
     # Image resize mode ['crop', 'square', 'pad64']
     IMAGE_RESIZE_MODE = 'crop'
 
@@ -319,7 +318,7 @@ ROOT_DIR = '../mask_data/'
 # Directory to save logs and trained model weights for tensorboard visualization and prediction.
 MODEL_DIR = '../mask_data/logs'
 
-TRAIN_PATH = '../mask_data/train_image/'
+TRAIN_PATH = '../mask_data/train_image_new/'
 
 TEST_PATH = '../mask_data/test_image/'
 

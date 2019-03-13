@@ -78,20 +78,19 @@ class ClomaskDataset(utils.Dataset):
         else:
             path = self.train_path + info['img_name']
             mask = []
-            label_array = []
+            class_ids = []
             for mask_file in next(os.walk(path + MASK_PATH))[2]:
                 if 'png' in mask_file:
                         # these lines have been commented out due to invalid test data file name
-                        # class_id = int(mask_file.split('$')[1][:-4])
-                        # label_array.append(class_id)
                         mask_ = cv2.imread(path + MASK_PATH + mask_file, 0)
                         mask_ = np.where(mask_ > 128, 1, 0)
                         # Add mask only if its area is larger than one pixel
                         if np.sum(mask_) >= 1:
                             mask.append(np.squeeze(mask_))
+                            class_id = int(mask_file.split('$')[1][:-4])
+                            class_ids.append(class_id)
             mask = np.stack(mask, axis=-1)
-            class_ids = np.ones(mask.shape[2])
-        return mask.astype(np.uint8), class_ids.astype(np.int8)
+        return mask.astype(np.uint8), np.array(class_ids)
 
 
 class ClomaskTrain(object):
@@ -112,10 +111,9 @@ class ClomaskTrain(object):
 
         train_list, test_list = os.listdir(TRAIN_PATH), os.listdir(TEST_PATH)
         #train_list, test_list = train_test_split(os.listdir(TRAIN_PATH), test_size=0.1,
-         #                                        random_state=2019)
+        #                                         random_state=2019)
     # Use this for explode the training data for use in augmentation.
     # train_list = np.repeat(train_list,5)
-
         # initialize training dataset
         train_data = ClomaskDataset()
         train_data.load_shapes(train_list, TRAIN_PATH)
@@ -154,27 +152,28 @@ class ClomaskTrain(object):
                     iaa.Sometimes(0.5,iaa.Fliplr(0.5),iaa.Flipud(0.5)),
                     iaa.OneOf([iaa.Affine(rotate=0),
                         iaa.Affine(rotate=90),
-                        iaa.Sometimes(0.5, iaa.Affine(rotate=(-20, 20)))]),
-                    iaa.Sometimes(0.2, iaa.Affine(scale=randint(2, 3))),
+                        iaa.Sometimes(0.5, iaa.Affine(rotate=(-20, 20)))])
+                    #iaa.Sometimes(0.2, iaa.Affine(scale=randint(2, 3))),
                     ])
 
         # Start Training the model
-
+        # "mrcnn_mask"
+        # "mask_heads"
         self.model.train(self.train_data, self.val_data,
                     learning_rate=self.learning_rate_one,
-                    epochs=5,
-                    layers='heads',
+                    epochs=30,
+                    layers='all',
                     augmentation=augmentation)
 
         self.model.train(self.train_data, self.val_data,
                     learning_rate=self.learning_rate_two,
-                    epochs=40,
+                    epochs=60,
                     layers='all',
                     augmentation=augmentation)
 
         self.model.train(self.train_data, self.val_data,
                     learning_rate=self.learning_rate_three,
-                    epochs=75,
+                    epochs=90,
                     layers='all',
                     augmentation=augmentation)
 
