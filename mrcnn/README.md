@@ -1,4 +1,4 @@
-# Data Synthesis
+# Model Training
 
 ## Table of Contents
 
