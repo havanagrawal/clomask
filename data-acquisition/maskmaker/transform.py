@@ -18,6 +18,7 @@ The top level directory name can be passed as an argument.
 
 import os
 import glob
+import json
 import logging
 import shutil as sh
 
@@ -39,8 +40,8 @@ def get_masks_for(mask_path, image_id):
 def _make_dirs(dest_dir, image_id):
     """Create the directories for this image ID"""
     dirs_to_make = {
-        "image_dir": os.path.join(dest_dir, image_id, "image"),
-        "mask_dir": os.path.join(dest_dir, image_id, "masks")
+        "image_dir": os.path.join(dest_dir, image_id, "train_image"),
+        "mask_dir": os.path.join(dest_dir, image_id, "train_mask")
     }
 
     for dir_to_make in dirs_to_make.values():
@@ -56,6 +57,7 @@ def parse_args():
     parser.add_argument("--user", required=False, default="havanagrawal", help="The username who labeled the data on LabelMe")
     parser.add_argument("--cname", required=False, default="bottles", help="The name of the collection on LabelMe")
     parser.add_argument("--dest", required=False, default="images", help="The top level directory in the output. Consider naming this either 'train' or 'test'")
+    parser.add_argument("--class-map-file", required=False, default="./class_map.json", help="The JSON file containing the class to ID mapping")
 
     return parser.parse_args()
 
@@ -71,6 +73,8 @@ def main(args):
     image_ids = {s.split(".")[0] for s in os.listdir(image_path)}
     logging.info("Found %d images", len(image_ids))
 
+    class_map = json.load(open(args.class_map_file))
+
     for img_id in image_ids:
         # Create necessary directories
         dirs = _make_dirs(args.dest, img_id)
@@ -81,14 +85,14 @@ def main(args):
         xml_filepath = os.path.join(annotation_path, img_id + ".xml")
 
         # Read the XML with polygons and generate masks
-        imask = ImageMask(xml_filepath, img_color=BLACK, polygon_fill=WHITE)
+        imask = ImageMask(xml_filepath, class_map=class_map, img_color=BLACK, polygon_fill=WHITE)
 
         # Save mask files to appropriate location
         if not imask.polygons:
-            for mask_file in get_masks_for(mask_path, img_id):
-                sh.copy(mask_file, dirs["mask_dir"])
-        else:
-            imask.save_masks(dirs["mask_dir"])
+            logging.error("Old format of masks is unsupported. Please use the polygon tool to make masks for %s", image_file)
+            continue
+
+        imask.save_masks(dirs["mask_dir"])
 
         # Move image files to the desired location
         sh.copy(image_filepath, dirs["image_dir"])

@@ -1,3 +1,10 @@
+"""The script that serves the model. Follows a simple flow:
+    1. Read an S3 URI from the SQS queue
+    2. Download the image
+    3. Run the model's predict method to create the mask
+    4. Upload the mask.
+"""
+
 import os
 import json
 from time import sleep

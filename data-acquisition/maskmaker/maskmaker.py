@@ -18,10 +18,11 @@ FILL = (255, 255, 255)
 IMG_COLOR = (255, 255, 255, 0)
 
 class ImageMask(object):
-    def __init__(self, xml_path, img_color=IMG_COLOR, polygon_fill=FILL, img_format='PNG'):
+    def __init__(self, xml_path, class_map, img_color=IMG_COLOR, polygon_fill=FILL, img_format='PNG'):
         """Create an ImageMask instance from an XML path
         """
         self.root = ET.parse(xml_path)
+        self.class_map = class_map
         self._masks = []
         self.img_color = img_color
         self.polygon_fill = polygon_fill
@@ -84,6 +85,8 @@ class ImageMask(object):
         i = 0
         for mask, annot in zip(self.masks, self.annotations):
             mask_file = self._mask_name(i, annot)
+            if mask_file is None:
+                continue
             mask_filepath = os.path.join(output_dir, mask_file)
             mask.save(mask_filepath, self.img_format)
             i += 1
@@ -103,4 +106,15 @@ class ImageMask(object):
 
     def _mask_name(self, i, annot):
         """Create a pretty mask name. Assume we won't have more than 999 masks in an image"""
-        return str(i).rjust(3, "0") + "_" + annot + "." + self.img_format.lower()
+        fmt = "{annot}_{k}${class_id}.{img_fmt}"
+        try:
+            name = fmt.format(
+                annot=annot,
+                k=str(i).rjust(3, "0"),
+                class_id=self.class_map[annot],
+                img_fmt=self.img_format.lower()
+            )
+        except KeyError:
+            name = None
+
+        return name
