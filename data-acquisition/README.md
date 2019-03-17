@@ -97,4 +97,4 @@ The annotated data will be store in a common location, probably a drive or in an
 
 ### Attributions
 
-The [./data-synthesizer/img_templates/backgrounds/blue_vector_shelf.jpg](blue vector shelf) image has been downloaded from [www.freevector.com](www.freevector.com)
+The [blue vector shelf](./data-synthesizer/img_templates/backgrounds/blue_vector_shelf.jpg) image has been downloaded from [www.freevector.com](www.freevector.com)
