@@ -10,7 +10,7 @@ import matplotlib
 import matplotlib.pyplot as plt
 
 from ...api import Model
-from ...utils import post_process
+from ...imutils import post_process
 
 # Import Mask RCNN
 import utils

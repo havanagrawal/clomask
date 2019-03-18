@@ -8,7 +8,7 @@ import os
 import skimage.io
 
 from . import Model
-from ..utils import post_process
+from ..imutils import post_process
 
 # Import Mask RCNN
 import visualize

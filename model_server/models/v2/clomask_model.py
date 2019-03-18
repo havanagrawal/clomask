@@ -9,8 +9,8 @@ import skimage.io
 import matplotlib
 import matplotlib.pyplot as plt
 
-from ...api import Model
-from ...utils import post_process
+from ...api import MaskRCNNModel
+from ...imutils import post_process
 
 # Import Mask RCNN
 import utils
@@ -21,10 +21,13 @@ from .config import InferenceConfig
 
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 
+MODEL_DIR = os.path.join(ROOT_DIR, "logs")
+
 # Local path to trained weights file
 CLOMASK_MODEL_PATH = os.path.join(ROOT_DIR, "mask_rcnn_clomask_0055.h5")
 
-class ClomasksModel(MaskRCNNModel):
+
+class ClomaskModel(MaskRCNNModel):
     def __init__(self, items=None):
         """Initialize the Clomask Model
 
