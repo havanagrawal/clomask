@@ -6,35 +6,39 @@
 """
 
 import os
+import sys
 import json
 from time import sleep
 import logging
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s %(levelname)-8s [%(process)d] %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
 
+abspath = os.path.abspath
+sys.path.extend([
+    abspath("mrcnn"),
+    abspath("mrcnn/scripts")
+])
+
 import boto3
 
-from config import *
-from coco_model import CocoModel
+from .config import *
+from .models import CocoModel, ClomaskModel
 
 # For now, we want to detect only bottles
 ITEMSET = ['bottle']
 
-MODEL = CocoModel(items=ITEMSET)
+MODEL = ClomaskModel(items=ITEMSET)
 MODEL.load()
 
 SQS_QUEUE = boto3.resource("sqs").Queue(SQS_URL)
 INPUT_S3_BUCKET = boto3.resource("s3").Bucket(INPUT_S3_BUCKET_NAME)
 OUTPUT_S3_BUCKET = boto3.resource("s3").Bucket(OUTPUT_S3_BUCKET_NAME)
 
-DOWNLOAD_DIR = "downloads/"
+DOWNLOAD_DIR = "downloads"
+OUTPUT_DIR = "output"
 
 # How long should we wait if the queue is empty
 SLEEP_TIME_IN_SEC = 2
-
-# Create the output dir if it doesn't exist
-if not os.path.exists(OUTPUT_DIR):
-    os.mkdir(OUTPUT_DIR)
 
 def s3_image_key_gen():
     while True:
@@ -54,16 +58,15 @@ def s3_image_key_gen():
             yield obj_key, message.receipt_handle
 
 
-def cleanup(s3_image_key):
-    os.remove(s3_image_key)
-    os.remove(OUTPUT_DIR + "/" + s3_image_key)
-
-
 def main():
     logging.info("Starting up...")
 
     if not os.path.exists(DOWNLOAD_DIR):
         os.mkdir(DOWNLOAD_DIR)
+
+    # Create the output dir if it doesn't exist
+    if not os.path.exists(OUTPUT_DIR):
+        os.mkdir(OUTPUT_DIR)
 
     # Indefinite loop to listen to messages on the queue
     for s3_image_key, receipt_handle in s3_image_key_gen():
@@ -84,7 +87,8 @@ def main():
         logging.info("Uploaded %s to S3", s3_image_key)
 
         # Cleanup files
-        cleanup(download_path)
+        os.remove(download_path)
+        os.remove(output_file)
         logging.info("Cleaned up local files")
 
         # Delete from queue, so that we don't reprocess it

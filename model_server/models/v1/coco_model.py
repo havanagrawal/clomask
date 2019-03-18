@@ -9,21 +9,18 @@ import skimage.io
 import matplotlib
 import matplotlib.pyplot as plt
 
-from model_api import Model
-from imutils import post_process
-
-# Root directory of the project
-ROOT_DIR = os.path.abspath("Mask_RCNN")
+from ...api import Model
+from ...utils import post_process
 
 # Import Mask RCNN
-sys.path.append(ROOT_DIR)  # To find local version of the library
-from mrcnn import utils
-import mrcnn.model as modellib
-from mrcnn import visualize
+import utils
+import visualize
+import model as modellib
 
 # Import COCO config
-sys.path.append(os.path.join(ROOT_DIR, "samples/coco/"))  # To find local version
-import coco
+from .config import InferenceConfig
+
+ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 
 # Directory to save logs and trained model
 MODEL_DIR = os.path.join(ROOT_DIR, "logs")
@@ -34,13 +31,6 @@ COCO_MODEL_PATH = os.path.join(ROOT_DIR, "mask_rcnn_coco.h5")
 # Download COCO trained weights from Releases if needed
 if not os.path.exists(COCO_MODEL_PATH):
     utils.download_trained_weights(COCO_MODEL_PATH)
-
-
-class InferenceConfig(coco.CocoConfig):
-    # Set batch size to 1 since we'll be running inference on
-    # one image at a time. Batch size = GPU_COUNT * IMAGES_PER_GPU
-    GPU_COUNT = 1
-    IMAGES_PER_GPU = 1
 
 
 # COCO Class names
@@ -95,8 +85,8 @@ class CocoModel(Model):
             items = class_names
         self.items = list(items)
 
-    def load(self, filepath=None):
-        self.model.load_weights(COCO_MODEL_PATH, by_name=True)
+    def load(self, filepath=COCO_MODEL_PATH):
+        self.model.load_weights(filepath, by_name=True)
 
     def create_mask(self, filepath, output_dir):
         output_path = output_dir + "/" + os.path.basename(filepath)
@@ -121,9 +111,3 @@ class CocoModel(Model):
         skimage.io.imsave(output_path, out)
 
         return output_path
-
-if __name__ == "__main__":
-    model = CocoModel()
-    model.load()
-    f = model.create_mask("15409674101077949923911974822053.jpg", "output")
-    print(f)
