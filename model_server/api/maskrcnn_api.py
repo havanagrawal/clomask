@@ -39,26 +39,70 @@ class MaskRCNNModel(Model):
     def load(self, filepath=None):
         self.model.load_weights(filepath, by_name=True)
 
-    def create_mask(self, filepath, output_dir):
-        return self.create_masks([filepath], output_dir)[0]
+    def create_mask(self, filepath, output_dir, generate_per_class=False):
+        return self.create_masks([filepath], output_dir, generate_per_class)
 
-    def create_masks(self, filepaths, output_dir):
-        output_paths = [output_dir + "/" + os.path.basename(filepath) for filepath in filepaths]
+    def create_masks(self, filepaths, output_dir, generate_per_class=False):
+        """Create and persist masks for each image from the filepaths
+
+            Arguments
+            ---------
+            filepaths: iterable[str]
+                An iterable of path-like objects or strings representing filepaths
+
+            output_dir: str, path-like
+                The output directory to which the masks will be written
+
+            generate_per_class: bool, default=False
+                Whether additional images should be generated for each class.
+                Thus if there are k classes, k + 1 images will be generated:
+                    1 for each class (k)
+                    1 with all classes
+        """
         images = [skimage.io.imread(filepath) for filepath in filepaths]
 
         # Run detection
         results = self.model.detect(images, verbose=1)
 
+        output_paths = []
+
         # Visualize results
-        for r, image, output_path in zip(results, images, output_paths):
+        for r, image, filepath in zip(results, images, filepaths):
+            file_basename = os.path.basename(filepath)
+            output_path = output_dir + "/" + file_basename
+
+            captions = ["{:.3f}".format(score) for score in r['scores']]
             visualize.display_instances(image, r['rois'], r['masks'], r['class_ids'],
                                         self.class_names, r['scores'],
                                         show_label=True, show_bbox=False,
+                                        captions=captions,
                                         figsize=(8, 8), savepath=output_path)
 
-            out = skimage.io.imread(output_path)
-            skimage.io.imsave("tmp.jpg", out)
-            out = post_process(out)
+            out = post_process(skimage.io.imread(output_path))
             skimage.io.imsave(output_path, out)
+            output_paths.append(output_path)
+
+            if generate_per_class:
+                for class_id in set(r['class_ids']):
+                    res = self._filter_for_class_id(r, class_id)
+                    output_path = output_dir + "/" + str(class_id) + "/" + file_basename
+                    captions = ["{:.3f}".format(score) for score in res['scores']]
+                    visualize.display_instances(image, res['rois'], res['masks'], res['class_ids'],
+                                                self.class_names, res['scores'],
+                                                show_label=True, show_bbox=False,
+                                                captions=captions,
+                                                figsize=(8, 8), savepath=output_path)
+                    out = post_process(skimage.io.imread(output_path))
+                    skimage.io.imsave(output_path, out)
+                    output_paths.append(output_path)
 
         return output_paths
+
+    def _filter_for_class_id(self, result, class_id):
+        filter = result['class_ids'] == class_id
+        return {
+            'rois': result['rois'][filter],
+            'masks': result['masks'][..., filter],
+            'class_ids': result['class_ids'][filter],
+            'scores': result['scores'][filter],
+        }
