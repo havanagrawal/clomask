@@ -28,7 +28,7 @@ CLOMASK_MODEL_PATH = os.path.join(ROOT_DIR, "mask_rcnn_clomask_0055.h5")
 
 
 class ClomaskModel(MaskRCNNModel):
-    def __init__(self, items=None):
+    def __init__(self, class_names):
         """Initialize the Clomask Model
 
         Arguments
@@ -37,7 +37,7 @@ class ClomaskModel(MaskRCNNModel):
             Only items from this list will be annotated, and the rest will be discarded.
             If not provided, all masks are generated.
         """
-        super().__init__(name="Clomask", config=InferenceConfig(), model_dir=MODEL_DIR, items=items)
+        super().__init__(name="Clomask", config=InferenceConfig(), model_dir=MODEL_DIR, class_names=class_names)
 
     def load(self, filepath=CLOMASK_MODEL_PATH):
         self.model.load_weights(filepath, by_name=True)

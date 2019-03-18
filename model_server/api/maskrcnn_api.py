@@ -16,7 +16,7 @@ import model as modellib
 
 class MaskRCNNModel(Model):
     """Base implementation for MaskRCNN based models"""
-    def __init__(self, name, config, model_dir, items=None):
+    def __init__(self, name, config, model_dir, class_names):
         """Initialize the Coco Model
 
         Arguments
@@ -34,8 +34,7 @@ class MaskRCNNModel(Model):
             config=config
         )
 
-        self.items = list(items)
-        self.class_names = items
+        self.class_names = class_names
 
     def load(self, filepath=None):
         self.model.load_weights(filepath, by_name=True)

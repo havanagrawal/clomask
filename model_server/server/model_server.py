@@ -5,6 +5,8 @@
     4. Upload the mask.
 """
 
+print(__name__)
+
 import os
 import sys
 import json

@@ -9,7 +9,7 @@ import skimage.io
 import matplotlib
 import matplotlib.pyplot as plt
 
-from ...api import Model
+from ...api import MaskRCNNModel
 from ...imutils import post_process
 
 # Import Mask RCNN
@@ -64,7 +64,7 @@ def filter_results(r, itemset):
     return r
 
 
-class CocoModel(Model):
+class CocoModel(MaskRCNNModel):
     def __init__(self, items=None):
         """Initialize the Coco Model
 
@@ -74,16 +74,8 @@ class CocoModel(Model):
             Only items from this list will be annotated, and the rest will be discarded.
             If not provided, all masks are generated.
         """
-        super().__init__("Coco")
-        config = InferenceConfig()
-
-        # Create model object in inference mode.
-        self.model = modellib.MaskRCNN(mode="inference", model_dir=MODEL_DIR, config=config)
-
-        # Default to all classes in case no filter is provided
-        if not items:
-            items = class_names
-        self.items = list(items)
+        super().__init__(name="Coco", config=InferenceConfig(), model_dir=MODEL_DIR, class_names=class_names)
+        self.items = items or class_names
 
     def load(self, filepath=COCO_MODEL_PATH):
         self.model.load_weights(filepath, by_name=True)
@@ -94,10 +86,11 @@ class CocoModel(Model):
         print(image.shape)
 
         # Run detection
-        results = self.model.detect([image], verbose=1)
+        results = self.model.detect([image], verbose=2)
 
         # Visualize results
         r = results[0]
+        print(r)
         r = filter_results(r, self.items)
 
         visualize.display_instances(image, r['rois'], r['masks'], r['class_ids'],
