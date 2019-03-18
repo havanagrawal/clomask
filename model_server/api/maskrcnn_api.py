@@ -40,24 +40,25 @@ class MaskRCNNModel(Model):
         self.model.load_weights(filepath, by_name=True)
 
     def create_mask(self, filepath, output_dir):
-        output_path = output_dir + "/" + os.path.basename(filepath)
-        image = skimage.io.imread(filepath)
-        print(image.shape)
+        return self.create_masks([filepath], output_dir)[0]
+
+    def create_masks(self, filepaths, output_dir):
+        output_paths = [output_dir + "/" + os.path.basename(filepath) for filepath in filepaths]
+        images = [skimage.io.imread(filepath) for filepath in filepaths]
 
         # Run detection
-        results = self.model.detect([image], verbose=1)
+        results = self.model.detect(images, verbose=1)
 
         # Visualize results
-        r = results[0]
+        for r, image, output_path in zip(results, images, output_paths):
+            visualize.display_instances(image, r['rois'], r['masks'], r['class_ids'],
+                                        self.class_names, r['scores'],
+                                        show_label=True, show_bbox=False,
+                                        figsize=(8, 8), savepath=output_path)
 
-        visualize.display_instances(image, r['rois'], r['masks'], r['class_ids'],
-                                    self.class_names, r['scores'],
-                                    show_label=False, show_bbox=False,
-                                    figsize=(8, 8), savepath=output_path)
+            out = skimage.io.imread(output_path)
+            skimage.io.imsave("tmp.jpg", out)
+            out = post_process(out)
+            skimage.io.imsave(output_path, out)
 
-        out = skimage.io.imread(output_path)
-        skimage.io.imsave("tmp.jpg", out)
-        out = post_process(out)
-        skimage.io.imsave(output_path, out)
-
-        return output_path
+        return output_paths
