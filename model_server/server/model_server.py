@@ -4,9 +4,6 @@
     3. Run the model's predict method to create the mask
     4. Upload the mask.
 """
-
-print(__name__)
-
 import os
 import sys
 import json
@@ -24,13 +21,7 @@ sys.path.extend([
 import boto3
 
 from .config import *
-from .models import CocoModel, ClomaskModel
-
-# For now, we want to detect only bottles
-ITEMSET = ['bottle']
-
-MODEL = ClomaskModel(items=ITEMSET)
-MODEL.load()
+from ..models import ClomaskModel
 
 SQS_QUEUE = boto3.resource("sqs").Queue(SQS_URL)
 INPUT_S3_BUCKET = boto3.resource("s3").Bucket(INPUT_S3_BUCKET_NAME)
@@ -44,12 +35,7 @@ SLEEP_TIME_IN_SEC = 2
 
 def s3_image_key_gen():
     while True:
-        messages = SQS_QUEUE.receive_messages(MaxNumberOfMessages=10)
-        if not messages:
-            logging.info("Sleeping for %d seconds", SLEEP_TIME_IN_SEC)
-            sleep(SLEEP_TIME_IN_SEC)
-            continue
-
+        messages = SQS_QUEUE.receive_messages(MaxNumberOfMessages=10, WaitTimeSeconds=SLEEP_TIME_IN_SEC)
         logging.info("Received %d messages", len(messages))
 
         for message in messages:
@@ -60,6 +46,11 @@ def s3_image_key_gen():
             yield obj_key, message.receipt_handle
 
 
+def make_key(filename):
+    just_file = os.path.basename(filename)
+    parent_dir = os.path.basename(os.path.dirname(filename))
+    return parent_dir + "/" + just_file
+
 def main():
     logging.info("Starting up...")
 
@@ -69,6 +60,12 @@ def main():
     # Create the output dir if it doesn't exist
     if not os.path.exists(OUTPUT_DIR):
         os.mkdir(OUTPUT_DIR)
+
+    class_names = [None, 'bottle', 'box', 'bag']
+    model = ClomaskModel(class_names=class_names)
+    model.load()
+
+    logging.info("Loaded model")
 
     # Indefinite loop to listen to messages on the queue
     for s3_image_key, receipt_handle in s3_image_key_gen():
@@ -81,16 +78,19 @@ def main():
         logging.info("Downloaded %s from S3", s3_image_key)
 
         # Get the mask predictions and annotations
-        output_file = MODEL.create_mask(download_path, OUTPUT_DIR)
+        output_files = model.create_mask(download_path, OUTPUT_DIR, generate_per_class=True)
         logging.info("Created mask for %s", s3_image_key)
 
         # Upload to output S3 bucket
-        OUTPUT_S3_BUCKET.upload_file(Filename=output_file, Key=s3_image_key)
+        for output_file in output_files:
+            key = make_key(output_file)
+            OUTPUT_S3_BUCKET.upload_file(Filename=output_file, Key=key)
         logging.info("Uploaded %s to S3", s3_image_key)
 
         # Cleanup files
         os.remove(download_path)
-        os.remove(output_file)
+        for output_file in output_files:
+            os.remove(output_file)
         logging.info("Cleaned up local files")
 
         # Delete from queue, so that we don't reprocess it
