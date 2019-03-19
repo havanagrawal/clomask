@@ -1,241 +1,269 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-    <meta name="description" content="">
-    <meta name="author" content="">
-    <meta name="google-signin-client_id" content="925797148573-q7btev87hp1qfj80ehlgc7jrnlk7eed5.apps.googleusercontent.com">
 
-    <link rel="icon" href="favicon.ico">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <meta name="google-signin-client_id" content="925797148573-rie7qdmrsn7cpj20vt4c8n236l6d6rfl.apps.googleusercontent.com">
 
-    <title>CloMask</title>
+  <link rel="icon" href="favicon.ico">
 
-    <!--*******
+  <title>CloMask</title>
+
+  <!--*******
     *** CSS ***
     ********-->
-    <!-- Latest compiled and minified CSS -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  <!-- Latest compiled and minified CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css" integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css" integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz" crossorigin="anonymous">
 
-    <!--******
+  <!--******
     *** JS ***
     *******-->
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 
-    <script src="./js/dropzone.js"></script>
+  <script src="./js/dropzone.js"></script>
 
-    <script src="https://apis.google.com/js/platform.js" async defer></script>
-    <script src="./js/aws-sdk.min.js"></script>
-    <script src="./js/s3utils.js"></script>
+  <script src="https://apis.google.com/js/platform.js" async defer></script>
+  <script src="./js/aws-sdk.min.js"></script>
+  <script src="./js/s3utils.js"></script>
 
-    <script src="./js/credentials.js"></script>
+  <script src="./js/credentials.js"></script>
 
-    <!-- Custom styles for this template -->
-    <link href="css/jumbotron-narrow.css" rel="stylesheet">
-  </head>
+  <!-- Custom styles for this template -->
+  <link href="css/jumbotron-narrow.css" rel="stylesheet">
+</head>
 
-  <body onload="setup()">
+<body onload="setup()">
 
-    <div class="container">
-      <!------------->
-      <!-- The Nav -->
-      <!------------->
-      <div class="header clearfix">
-        <nav class="navbar navbar-expand-lg navbar-light bg-light justify-content-between">
-          <div>
-            <a class="navbar-brand" href="#"><h3 class="text-muted">CloMask</h3></a>
+  <div class="container">
+    <!------------->
+    <!-- The Nav -->
+    <!------------->
+    <div class="header clearfix">
+      <nav class="navbar navbar-expand-lg navbar-light bg-light justify-content-between">
+        <div>
+          <a class="navbar-brand" href="#">
+            <h3 class="text-muted">CloMask</h3>
+          </a>
+        </div>
+
+        <div>
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+              <li role="presentation" class="nav-item active"><a class="nav-link" href="#">Home</a></li>
+              <li role="presentation" class="nav-item"><a class="nav-link" href="#">About</a></li>
+              <li role="presentation" class="nav-item"><a class="nav-link" href="https://github.com/havanagrawal/clomask">GitHub</a></li>
+              <li role="presentation" class="nav-item">
+                <div class="g-signin2" data-onsuccess="onSignIn"></div>
+              </li>
+            </ul>
           </div>
+        </div>
+      </nav>
+    </div>
 
-          <div>
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-              <ul class="navbar-nav mr-auto">
-                <li role="presentation" class="nav-item active"><a class="nav-link" href="#">Home</a></li>
-                <li role="presentation" class="nav-item"><a class="nav-link" href="#">About</a></li>
-                <li role="presentation" class="nav-item"><a class="nav-link" href="https://github.com/havanagrawal/clomask">GitHub</a></li>
-                <li role="presentation" class="nav-item"><div class="g-signin2" data-onsuccess="onSignIn"></div></li>
-              </ul>
-            </div>
-          </div>
-        </nav>
-      </div>
-
-      <!------------------>
-      <!-- The drop box -->
-      <!------------------>
-      <form onsubmit="uploadImage(event);" id="uploadform">
+    <!------------------>
+    <!-- The drop box -->
+    <!------------------>
+    <form onsubmit="uploadImage(event);" id="uploadform">
       <div class="jumbotron" id="imagedrop">
 
-          <input name="file" type="file" id="dropfallback" style="display: none;" />
-          <h1>Upload File</h1>
-          <p class="lead"><i id="uploadicon" class="fas fa-upload"></i>Upload (or Drag and Drop File Here)</p>
+        <input name="file" type="file" id="dropfallback" style="display: none;" />
+        <h1>Upload File</h1>
+        <p class="lead"><i id="uploadicon" class="fas fa-upload"></i>Upload (or Drag and Drop File Here)</p>
       </div>
+
+      <!----------------->
+      <!-- Hover icons -->
+      <!----------------->
       <div class="row">
-        <div class="col-md-1">
+        <div class="col-md-3">
           <div class="row">
-            <!-- Hovering over this should show the masks -->
-            <div class="col-md-1">
-              <img id="masked" src="http://cocodataset.org/images/cocoicons/44.jpg" width="25px"/>
-            </div>
             <!-- Hovering over this should hide the masks -->
-            <div class="col-md-1">
-              <img id="original" src="http://cocodataset.org/images/cocoicons/blank.jpg" width="25px"/>
+            <div class="col-sm-2 col-md-2 col-lg-2">
+              <img id="original" src="http://cocodataset.org/images/cocoicons/blank.jpg" width="25px" />
+            </div>
+
+            <!-- Hovering over this should show the bottle masks -->
+            <div class="col-sm-2 col-md-2 col-lg-2">
+              <img id="bottles" src="http://cocodataset.org/images/cocoicons/44.jpg" width="25px" />
+            </div>
+
+            <!-- Hovering over this should show the bag masks -->
+            <div class="col-sm-2 col-md-2 col-lg-2">
+              <img id="bags" src="http://cocodataset.org/images/cocoicons/27.jpg" width="25px" />
+            </div>
+
+            <!-- Hovering over this should show the box masks -->
+            <div class="col-sm-2 col-md-2 col-lg-2">
+              <img id="boxes" src="http://cocodataset.org/images/cocoicons/80.jpg" width="25px" />
+            </div>
+
+            <!-- Hovering over this should show all masks -->
+            <div class="col-sm-2 col-md-2 col-lg-2">
+              <img id="masked" src="./img/all.jpg" width="25px" />
             </div>
           </div>
         </div>
       </div>
 
+
       <div id="maskedimage">
-
+        <img width="600" height="800" id="output", src="" />
       </div>
-      </form>
+    </form>
 
-      <!--------------------->
-      <!-- The bottom half -->
-      <!--------------------->
-      <div class="row marketing">
-        <div class="col-lg-6">
-          <h4>What</h4>
-          <p>CloMask is a custom implementation of Mask R-CNN for consumable retail products such as popular carbonated drinks, chips, etc.</p>
+    <!--------------------->
+    <!-- The bottom half -->
+    <!--------------------->
+    <div class="row marketing">
+      <div class="col-lg-6">
+        <h4>What</h4>
+        <p>CloMask is a custom implementation of Mask R-CNN for consumable retail products such as popular carbonated drinks, chips, etc.</p>
 
-          <h4>Issue</h4>
-          <p>If you encounter any issue with using the app, please <a href="https://github.com/havanagrawal/clomask/issues/new"></a>raise an issue</a> on the GitHub repo, clearly describing the problem, and providing the steps once can perform to reproduce the issue.</p>
-        </div>
-
-        <div class="col-lg-6">
-          <h4>Sponsor</h4>
-          <p>This project is sponsored by Clobotics</p>
-
-          <h4>Under Development</h4>
-          <p>This application is currently under active development, and so may have several features missing. For a complete list of features being worked on, check <a href="https://github.com/havanagrawal/clomask/issues">here</a></p>
-        </div>
+        <h4>Issue</h4>
+        <p>If you encounter any issue with using the app, please <a href="https://github.com/havanagrawal/clomask/issues/new"></a>raise an issue</a> on the GitHub repo, clearly describing the problem, and providing the steps once can perform to
+          reproduce the issue.</p>
       </div>
 
-      <footer class="footer">
-        <p>&copy; 2018.</p>
-      </footer>
+      <div class="col-lg-6">
+        <h4>Sponsor</h4>
+        <p>This project is sponsored by Clobotics</p>
 
+        <h4>Under Development</h4>
+        <p>This application is currently under active development, and so may have several features missing. For a complete list of features being worked on, check <a href="https://github.com/havanagrawal/clomask/issues">here</a></p>
+      </div>
     </div>
 
-    <div id="app">
-    </div>
-  </body>
+    <footer class="footer">
+      <p>&copy; 2018.</p>
+    </footer>
 
-  <script>
-    const urls = {};
+  </div>
 
-    $("#masked").hover(function() {
-      document.getElementById("output").src = urls["masked"]
-    })
+  <div id="app">
+  </div>
+</body>
 
-    $("#original").hover(function() {
-      document.getElementById("output").src = urls["original"]
-    })
+<script>
+  function sleep(sec) {
+    return new Promise(resolve => setTimeout(resolve, 1000 * sec));
+  }
 
-    function sleep(sec) {
-      return new Promise(resolve => setTimeout(resolve, 1000*sec));
-    }
-
-    /**
-     * Upload the image to the S3 bucket
-     * @param {file} imageFile - An image object uploaded from the UI
-     */
-    function uploadImage(imageFile) {
-      const s3 = new AWS.S3({
-         apiVersion: '2006-03-01',
-         params: {Bucket: 'clomask-input'}
-       });
-
-      addPhoto(s3, imageFile);
-    }
-
-    /**
-     * Waits for the output image to become available on the output bucket, and then display it
-     * @param {file} imageFile - An image object uploaded from the UI
-     */
-    function displayImageViaSignedUrl(imageFile) {
-      const s3 = new AWS.S3({
-         apiVersion: '2006-03-01',
-         params: {Bucket: 'clomask-output'}
-      });
-
-      const params = {
-        Bucket: 'clomask-output',
-        Key: imageFile.name,
+  /**
+   * Upload the image to the S3 bucket
+   * @param {file} imageFile - An image object uploaded from the UI
+   */
+  function uploadImage(imageFile) {
+    const s3 = new AWS.S3({
+      apiVersion: '2006-03-01',
+      params: {
+        Bucket: 'clomask-input'
       }
+    });
 
-      // Wait for the image to exist on the output bucket
-      s3.waitFor('objectExists', params, function(err, data) {
-        if (err) console.log(err, err.stack); // an error occurred
-        else {
-          // Get a presigned URL valid for 5 minutes
-          const url = s3.getSignedUrl('getObject', {
-            Bucket: 'clomask-output',
-            Key: imageFile.name,
-            Expires: 60*5
-          })
-          console.log(url);
+    addPhoto(s3, imageFile);
+  }
 
-          urls["masked"] = url
-          // Hacky way of getting original image URL
-          urls["original"] = url.replace("output", "input").split("?")[0]
+  /**
+   * Waits for the output image to become available on the output bucket, and then display it
+   * @param {file} imageFile - An image object uploaded from the UI
+   */
+  function displayImageViaSignedUrl(imageFile) {
+    const s3 = new AWS.S3({
+      apiVersion: '2006-03-01',
+      params: {
+        Bucket: 'clomask-output'
+      }
+    });
 
-          // Attach the image to the HTML
-          document.getElementById("maskedimage").innerHTML = "<img width=\"600\" height=\"800\" id=\"output\" src=\"" + url + "\" />"
+    const params = {
+      Bucket: 'clomask-output',
+      Key: "all/" + imageFile.name,
+    }
+
+    // Wait for the image to exist on the output bucket
+    s3.waitFor('objectExists', params, function(err, data) {
+      if (err) console.log(err, err.stack); // an error occurred
+      else {
+        // Mapping from label to s3 key
+        const urlsToGet = {
+          "original": "og/" + imageFile.name,
+          "masked": "all/" + imageFile.name,
+          "bottles": "1/" + imageFile.name,
+          "boxes": "2/" + imageFile.name,
+          "bags": "3/" + imageFile.name
         }
-      });
-    }
 
-    /**
-     * Upload the image to the S3 bucket, then render the output image on the UI
-     * @param {file} imageFile - An image object uploaded from the UI
-     */
-    function uploadAndDisplay(imageFile) {
-      uploadImage(imageFile);
-      displayImageViaSignedUrl(imageFile);
-    }
+        Object.keys(urlsToGet).forEach(function(label) {
+          // Get a presigned URL valid for 5 minutes
+          s3.getSignedUrl('getObject', {
+            Bucket: 'clomask-output',
+            Key: urlsToGet[label],
+            Expires: 60 * 5
+          }, function(err, url) {
+            $("#" + label).hover(function() {
+              document.getElementById("output").src = url
+            })
+          })
+        });
+      }
+    });
+  }
 
-    /**
-     * Set up the callbacks and actions on the drop area
-     */
-    function setup() {
-      /*******************************
-      *** Upload via Drag and Drop ***
-      ********************************/
-      Dropzone.autoDiscover = false;
-      var imageDropZone = new Dropzone("#imagedrop", {
-        url: '/',
-        acceptedFiles: "image/*,",
-        previewTemplate: "<div></div>"
+  /**
+   * Upload the image to the S3 bucket, then render the output image on the UI
+   * @param {file} imageFile - An image object uploaded from the UI
+   */
+  function uploadAndDisplay(imageFile) {
+    uploadImage(imageFile);
+    displayImageViaSignedUrl(imageFile);
+  }
+
+  /**
+   * Set up the callbacks and actions on the drop area
+   */
+  function setup() {
+    /*******************************
+     *** Upload via Drag and Drop ***
+     ********************************/
+    Dropzone.autoDiscover = false;
+    var imageDropZone = new Dropzone("#imagedrop", {
+      url: '/',
+      acceptedFiles: "image/*,",
+      previewTemplate: "<div></div>"
+    });
+    imageDropZone.on("addedfile", function(imageFile) {
+      console.log("Uploading image via the drag and drop");
+      uploadAndDisplay(imageFile);
+    });
+    imageDropZone.on("uploadprogress", function(dontcare, progress, bytes) {
+      console.log(progress);
+    })
+
+    /**********************************
+     *** Upload via Pop Up/Selection ***
+     ***********************************/
+    document.getElementById('uploadicon')
+      .addEventListener('click', function openDialog() {
+        document.getElementById('dropfallback').click();
       });
-      imageDropZone.on("addedfile", function(imageFile) {
-        console.log("Uploading image via the drag and drop");
+
+    document.getElementById('dropfallback')
+      .addEventListener('change', function submitForm() {
+        console.log("Uploadinging image via pop up and selection")
+        var imageFile = document.getElementById("dropfallback").files[0];
         uploadAndDisplay(imageFile);
       });
-      imageDropZone.on("uploadprogress", function(dontcare, progress, bytes) {
-        console.log(progress);
-      })
+  }
+</script>
 
-      /**********************************
-      *** Upload via Pop Up/Selection ***
-      ***********************************/
-      document.getElementById('uploadicon')
-              .addEventListener('click', function openDialog() {
-                document.getElementById('dropfallback').click();
-              });
-
-      document.getElementById('dropfallback')
-              .addEventListener('change', function submitForm() {
-                  console.log("Uploadinging image via pop up and selection")
-                  var imageFile = document.getElementById("dropfallback").files[0];
-                  uploadAndDisplay(imageFile);
-              });
-    }
-
-  </script>
 </html>
