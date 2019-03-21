@@ -38,7 +38,7 @@ The COCO dataset only has `bottle` (out of the other retail products we needed t
 
 This is a sub-repo that contains the Mask RCNN implementation files, modified for Clomask's use.
 
-## Model Server
+### Model Server
 
 In order to serve the model over the web, we use AWS to accept requests and generate the mask files on a private S3 bucket. These can be accessed through pre-signed URLs.
 
