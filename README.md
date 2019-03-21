@@ -2,9 +2,18 @@
 
 ## Table of Contents
 
+1. [Introduction](#introduction)
 1. [Directory Structure](#directory-structure)
 1. [Contributors](#contributors)
 1. [References](#references)
+
+## Introduction
+
+Clomask is an object-segmentation application for retail products. The goal is to segment retail products such as soda bottles, candy bags and cereal boxes in images using deep-learning based mask-detection.
+
+| Sample Input | Sample Output |
+|--------------|---------------|
+| ![input](examples/image/image001.jpg) | ![output](examples/mask/image001.jpg) |
 
 ## Directory Structure
 
@@ -12,6 +21,8 @@
 .
 ├── data-acquisition
 ├── research
+├── mrcnn
+├── model_server
 └── webapp
 ```
 
@@ -22,6 +33,14 @@ A major challenge was to acquire enough data without spending too much time/effo
 ### Research
 
 The COCO dataset only has `bottle` (out of the other retail products we needed to segment, such as `bag` and `box`), and thus we needed to retrain the model on newer data. This section covers our experiments, learnings and results from the training and validation process.
+
+### MRCNN
+
+This is a sub-repo that contains the Mask RCNN implementation files, modified for Clomask's use.
+
+## Model Server
+
+In order to serve the model over the web, we use AWS to accept requests and generate the mask files on a private S3 bucket. These can be accessed through pre-signed URLs.
 
 ### Web App
 

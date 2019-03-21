@@ -20,10 +20,11 @@ from matplotlib.patches import Polygon
 import IPython.display
 
 # Root directory of the project
-ROOT_DIR = os.path.abspath("../")
+ROOT_DIR = os.path.abspath("./mrcnn")
 
 # Import Mask RCNN
 sys.path.append(ROOT_DIR)  # To find local version of the library
+sys.path.append(os.path.join(ROOT_DIR, "scripts"))
 import utils
 
 
@@ -82,8 +83,8 @@ def apply_mask(image, mask, color, alpha=0.5):
 def display_instances(image, boxes, masks, class_ids, class_names,
                       scores=None, title="",
                       figsize=(16, 16), ax=None,
-                      show_mask=True, show_bbox=True,
-                      colors=None, captions=None):
+                      show_mask=True, show_bbox=True, show_label=True,
+                      colors=None, captions=None, savepath=None):
     """
     boxes: [num_instance, (y1, x1, y2, x2, class_id)] in image coordinates.
     masks: [height, width, num_instances]
@@ -135,16 +136,17 @@ def display_instances(image, boxes, masks, class_ids, class_names,
             ax.add_patch(p)
 
         # Label
-        if not captions:
-            class_id = class_ids[i]
-            score = scores[i] if scores is not None else None
-            label = class_names[class_id]
-            x = random.randint(x1, (x1 + x2) // 2)
-            caption = "{} {:.3f}".format(label, score) if score else label
-        else:
-            caption = captions[i]
-        ax.text(x1, y1 + 8, caption,
-                color='w', size=11, backgroundcolor="none")
+        if show_label:
+            if not captions:
+                class_id = class_ids[i]
+                score = scores[i] if scores is not None else None
+                label = class_names[class_id]
+                x = random.randint(x1, (x1 + x2) // 2)
+                caption = "{} {:.3f}".format(label, score) if score else label
+            else:
+                caption = captions[i]
+            ax.text(x1, y1 + 8, caption,
+                    color='w', size=11, backgroundcolor="none")
 
         # Mask
         mask = masks[:, :, i]
@@ -163,8 +165,13 @@ def display_instances(image, boxes, masks, class_ids, class_names,
             p = Polygon(verts, facecolor="none", edgecolor=color)
             ax.add_patch(p)
     ax.imshow(masked_image.astype(np.uint8))
-    if auto_show:
-        plt.show()
+
+    if savepath:
+        os.makedirs(os.path.dirname(savepath), exist_ok=True)
+        plt.savefig(savepath)
+
+    # if auto_show:
+    #     plt.show()
 
 
 def display_differences(image,
