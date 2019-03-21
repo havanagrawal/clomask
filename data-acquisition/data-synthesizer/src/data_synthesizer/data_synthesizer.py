@@ -402,6 +402,11 @@ class ParallelDataSynthesizer(DataSynthesizer):
 
         output_dir: path-like, str
             The directory to which the final dataset must be written.
+
+        Return
+        ------
+        save_path: str, path-like
+            The directory that contains the merged dataset
         """
         save_paths = [res.get() for res in results]
 
@@ -416,8 +421,11 @@ class ParallelDataSynthesizer(DataSynthesizer):
                 filepath = path + "/" + f
                 try:
                     shutil.move(filepath, save_path)
-                except Exception as e:
-                    print("Encountered error {}. Continuing.".format(e))
+                except shutil.Error as e:
+                    # The id.map.json file is duplicate, so we don't care
+                    # about copy/move errors
+                    pass
+
             shutil.rmtree(path)
 
         return save_path
