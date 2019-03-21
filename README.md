@@ -2,9 +2,18 @@
 
 ## Table of Contents
 
+1. [Introduction](#introduction)
 1. [Directory Structure](#directory-structure)
 1. [Contributors](#contributors)
 1. [References](#references)
+
+## Introduction
+
+Clomask is an object-segmentation application for retail products. The goal is to segment retail products such as soda bottles, candy bags and cereal boxes in images using deep-learning based mask-detection.
+
+| Sample Input | Sample Output |
+|--------------|---------------|
+| ![input](examples/image/image001.jpg) | ![output](examples/mask/image001.jpg) |
 
 ## Directory Structure
 
