@@ -1,4 +1,8 @@
-# CloMask - Mask R-CNN for Rigid/Non-Rigid Retail Consumables
+<h1 align="center">CloMask - Mask R-CNN for Rigid/Non-Rigid Retail Consumables</h1>
+
+<div align="center">
+  ![Python version](https://img.shields.io/badge/python-3.4+-blue.svg)
+</div>
 
 ## Table of Contents
 
