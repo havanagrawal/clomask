@@ -45,7 +45,6 @@ Data pre-processing using pre_process.py to generate .h5 file for masks.
 
 ### Model and Training
 
-```
  -- Modified Matterport's implementation of Mask-RCNN deep neural network for object instance segmentation.
     Model - Added two new methods to train just specific masks.
             mrcnn_mask: Just mask layers
