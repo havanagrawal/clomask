@@ -3,8 +3,7 @@
 ## Table of Contents
 
 1. [Introduction](#introduction)  
-1. [Examples](#examples)  
-1. [Usage](#usage)  
+1. [Training](#training)  
  
 
 ## Introduction
@@ -75,9 +74,9 @@ Data pre-processing using pre_process.py to generate .h5 file for masks.
         "mrcnn_mask_loss": 10.
     }
 
-```
    
 ### Model Execution and Run-Time
+
 Run `python pre_process.py` to pre-process data 
 
 Run `python train.py` to train the model. Model weights are saved at ../data/logs/kaggle_bowl/mask_rcnn.h5.
