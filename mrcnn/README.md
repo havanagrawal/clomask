@@ -81,7 +81,7 @@ Data pre-processing using pre_process.py to generate .h5 file for masks.
 ### Model Execution and Run-Time
 Run python pre_process.py to pre-process  data 
 
-Run python train.py to train the model. Model weights are saved at ../data/logs/kaggle_bowl/mask_rcnn.h5.
+Run `python train.py` to train the model. Model weights are saved at ../data/logs/kaggle_bowl/mask_rcnn.h5.
 
 Run python inference_notebook.ipynb.py to evaluate model performance on test set 
 
