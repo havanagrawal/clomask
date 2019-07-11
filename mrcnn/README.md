@@ -90,7 +90,6 @@ The following execution times are measured on Nvidia P100 GPUs provided by AWS D
 ```
 Each training epoch takes about 25 minutes.
 It takes about 18 hours to train the model from scratch.
-```
 
 ## Example model predictions
 
