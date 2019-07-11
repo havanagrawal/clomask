@@ -12,7 +12,7 @@
 
 ## Setup
 
-Run data syntheszer module to generate the training  datasets in the following folder structure:
+Run data synthesizer module to generate the training  datasets in the following folder structure:
 
 ~~~~~~~
         project
